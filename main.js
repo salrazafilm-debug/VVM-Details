@@ -96,7 +96,7 @@ function render() {
         <label>Phone<input id="f-phone" name="phone" type="tel" required autocomplete="tel"></label>
         <label>Email<input id="f-email" name="email" type="email" required autocomplete="email"></label>
         <label>Vehicle (year, make, model)<input id="f-vehicle" name="vehicle" required placeholder="e.g. 2022 Lexus IS 350"></label>
-        <label>Address and concerns<textarea id="f-notes" name="notes" rows="3" placeholder="Where we are coming to, and anything we should know"></textarea></label>
+        <label>Address &amp; concerns<span class="hint">Where should we arrive + any concerns or questions can let us know here - thank you so much!!! We will get back as soon as possible!</span><textarea id="f-notes" name="notes" rows="4" placeholder="Street address, city, ZIP"></textarea></label>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
         <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Booking…' : 'Book my day'}</button>

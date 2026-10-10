@@ -692,3 +692,6 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
   .pe-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .pe-tab{padding:12px 8px;font-size:.66rem;letter-spacing:.06em}
 }
+
+/* helper text under a form label */
+.form .hint{display:block;font-weight:500;font-size:.9rem;line-height:1.5;color:#33506e;text-wrap:pretty}
