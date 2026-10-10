@@ -281,3 +281,28 @@ html,body{overflow-x:clip}
   .ribbon{top:16px;left:16px;font-size:.72rem;padding:8px 14px}
 }
 @media(prefers-reduced-motion:reduce){.gold::before,.gold::after,.diamond::after,.gold h3,.diamond h3,.gem,.sp{animation:none!important}}
+
+/* ===== tier tweaks ===== */
+/* gold card: only the title is gold; price pills use the logo red */
+.gold .sizes li{background:linear-gradient(135deg,#ff6a3d,#d62f1f);color:#fff;font-weight:600;box-shadow:0 8px 22px rgba(228,87,46,.45)}
+.gold .sizes b{color:#fff}
+.hook{font:italic 900 clamp(1.15rem,2.2vw,1.55rem)/1.25 var(--display);letter-spacing:-.01em;color:#fff;margin:2px 0 10px}
+.gold .desc b,.gold .hook{color:#ffd45a}
+.card .desc b{font-weight:800;letter-spacing:.02em}
+
+/* big crown badge */
+.ribbon{gap:12px;padding:10px 22px 10px 14px;font-size:1rem;top:24px;left:24px;animation:float 3.6s ease-in-out infinite}
+.ribbon .crown{width:52px;height:40px;filter:drop-shadow(0 4px 8px rgba(120,70,0,.5))}
+.ribbon span{display:flex;gap:6px;align-items:baseline;line-height:1}
+.ribbon b{font-size:1.5rem;font-weight:900}
+@keyframes float{50%{transform:translateY(-5px)}}
+
+/* glowing Book my day buttons */
+.gold .cta{animation:glowGold 2.2s ease-in-out infinite}
+.diamond .cta{animation:glowBlue 2.4s ease-in-out infinite}
+.card.std .cta{animation:glowInk 2.6s ease-in-out infinite}
+@keyframes glowGold{0%,100%{box-shadow:0 0 14px rgba(255,214,90,.55),0 8px 24px rgba(247,200,60,.35)}50%{box-shadow:0 0 34px rgba(255,214,90,.95),0 0 60px rgba(247,180,40,.55),0 8px 24px rgba(247,200,60,.5)}}
+@keyframes glowBlue{0%,100%{box-shadow:0 0 12px rgba(80,160,240,.5),0 8px 24px rgba(45,120,196,.35)}50%{box-shadow:0 0 32px rgba(90,175,255,.95),0 0 56px rgba(80,160,240,.5)}}
+@keyframes glowInk{0%,100%{box-shadow:0 0 10px rgba(255,255,255,.0),0 6px 18px rgba(26,18,20,.3)}50%{box-shadow:0 0 28px rgba(228,87,46,.65),0 6px 18px rgba(26,18,20,.35)}}
+@media(max-width:900px){.ribbon{top:14px;left:14px;padding:8px 16px 8px 10px;font-size:.8rem}.ribbon .crown{width:42px;height:32px}.ribbon b{font-size:1.2rem}}
+@media(prefers-reduced-motion:reduce){.ribbon,.cta{animation:none!important}}
