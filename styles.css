@@ -150,3 +150,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ink);backgr
 .form input,.form select,.form textarea{color:var(--ink)}
 
 .hero-btns .btn{padding:19px 46px;font-size:1rem}
+
+.steps{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.steps .pillar{display:flex;flex-direction:column;gap:6px}
+.steps .pillar b{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--pink-3);display:grid;place-items:center;font:800 1.2rem var(--display);font-style:normal;margin-bottom:6px}
