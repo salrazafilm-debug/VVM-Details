@@ -760,3 +760,7 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 
 /* four across: reserve two lines for the title so every description starts at the same height */
 @media(min-width:1040px){.hstep h3{min-height:2.2em}}
+
+/* Full Factory Reset description: key words in bold white, no gold */
+.gold .desc{color:rgba(255,255,255,.88)}
+.gold .desc b{color:#fff;font-weight:800}
