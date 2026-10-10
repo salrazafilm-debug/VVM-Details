@@ -38,12 +38,6 @@ if (matchMedia('(hover:hover)').matches) {
   });
 }
 
-$('#copy').addEventListener('click', async () => {
-  const b = $('#copy');
-  try { await navigator.clipboard.writeText(CONTACT_EMAIL); b.textContent = 'Copied'; }
-  catch { const r = document.createRange(); r.selectNodeContents($('#email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; }
-  setTimeout(() => b.textContent = 'Copy', 1800);
-});
 $('#yr').textContent = new Date().getFullYear();
 
 /* ---------- Booking calendar ---------- */

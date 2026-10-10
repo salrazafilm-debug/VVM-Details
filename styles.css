@@ -204,3 +204,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ink);backgr
 html,body{overflow-x:clip}
 
 .grid4{grid-template-rows:1fr 1fr}.grid4 img{min-height:0}
+
+/* booking section: big title, single column */
+.book-card{grid-template-columns:1fr;max-width:720px;margin:0 auto;gap:20px}
+.book-title{font:italic 900 clamp(2.8rem,11vw,5.2rem)/1 var(--display);text-transform:uppercase;letter-spacing:-.03em;text-align:center}
