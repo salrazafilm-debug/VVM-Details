@@ -170,3 +170,60 @@ document.querySelectorAll('.sizes').forEach(ul => ul.addEventListener('click', e
   const on = b.classList.toggle('flipped');
   b.setAttribute('aria-pressed', on);
 }));
+
+/* ---------- "More info" flip card ---------- */
+document.querySelectorAll('.flip').forEach(w => {
+  const inner = w.querySelector('.flip-inner'), front = w.querySelector('.flip-face.front'), back = w.querySelector('.flip-face.back');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let timer;
+  const inert = (el, on) => { el.toggleAttribute('inert', on); el.setAttribute('aria-hidden', String(on)); };
+  inert(back, true);
+  function set(open) {
+    clearTimeout(timer);
+    if (open) { inner.style.height = front.offsetHeight + 'px'; inner.offsetHeight; inner.style.height = back.offsetHeight + 'px'; }
+    else { inner.style.height = back.offsetHeight + 'px'; inner.offsetHeight; inner.style.height = front.offsetHeight + 'px'; timer = setTimeout(() => { if (!w.classList.contains('flipped')) inner.style.height = ''; }, reduce ? 0 : 750); }
+    w.classList.toggle('flipped', open);
+    inert(front, open); inert(back, !open);
+    w.querySelectorAll('[data-flip="open"]').forEach(b => b.setAttribute('aria-expanded', String(open)));
+    w.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => (open ? back.querySelector('h3') : w.querySelector('[data-flip="open"]')).focus({ preventScroll: true }), reduce ? 0 : 750);
+  }
+  w.addEventListener('click', e => { const b = e.target.closest('[data-flip]'); if (b) set(b.dataset.flip === 'open'); });
+  w.addEventListener('keydown', e => { if (e.key === 'Escape' && w.classList.contains('flipped')) set(false); });
+  // keep the card height in step with the open guide (tab changes, images loading, window resize)
+  new ResizeObserver(() => { if (w.classList.contains('flipped')) inner.style.height = back.offsetHeight + 'px'; }).observe(back);
+});
+
+/* ---------- guide tabs ---------- */
+document.querySelectorAll('.pe-tabs').forEach(tabs => {
+  const btns = [...tabs.querySelectorAll('[role="tab"]')];
+  const panels = btns.map(b => document.getElementById(b.getAttribute('aria-controls')));
+  const select = i => btns.forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; panels[j].hidden = j !== i; });
+  btns.forEach((b, i) => b.addEventListener('click', () => select(i)));
+  tabs.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const n = (btns.indexOf(document.activeElement) + (e.key === 'ArrowRight' ? 1 : -1) + btns.length) % btns.length;
+    select(n); btns[n].focus();
+  });
+});
+
+/* ---------- photo + video slots: drop files in assets/uploads/ and they appear ---------- */
+const IMG_EXT = ['jpg', 'jpeg', 'png', 'webp'], VID_EXT = ['mp4', 'webm', 'mov'];
+function firstThatLoads(urls, test, done) { (function next(i) { if (i >= urls.length) return done(null); test(urls[i], ok => ok ? done(urls[i]) : next(i + 1)); })(0); }
+const caption = slot => { const c = document.createElement('span'); c.className = 'cap'; c.textContent = slot.dataset.label || ''; return c; };
+document.querySelectorAll('.mslot[data-img]').forEach(slot => {
+  const base = 'assets/uploads/' + slot.dataset.img;
+  firstThatLoads(IMG_EXT.map(x => `${base}.${x}`), (src, cb) => { const im = new Image(); im.onload = () => cb(true); im.onerror = () => cb(false); im.src = src; }, src => {
+    if (!src) return;
+    const im = document.createElement('img'); im.src = src; im.alt = slot.dataset.label || ''; im.loading = 'lazy';
+    slot.replaceChildren(im, caption(slot)); slot.classList.add('filled');
+  });
+});
+document.querySelectorAll('.mslot[data-video]').forEach(slot => {
+  const base = 'assets/uploads/' + slot.dataset.video;
+  firstThatLoads(VID_EXT.map(x => `${base}.${x}`), (src, cb) => { const v = document.createElement('video'); v.preload = 'metadata'; v.onloadedmetadata = () => cb(true); v.onerror = () => cb(false); v.src = src; }, src => {
+    if (!src) return;
+    const v = document.createElement('video'); v.src = src; v.controls = true; v.playsInline = true; v.preload = 'metadata'; v.setAttribute('aria-label', slot.dataset.label || 'Video');
+    slot.replaceChildren(v); slot.classList.add('filled');
+  });
+});

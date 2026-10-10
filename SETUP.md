@@ -26,3 +26,8 @@ Netlify > Domain management > add `vvmdetails.com` and follow the DNS steps at y
 
 ## If you move to Square Appointments Plus or Premium
 Set `BOOKING_MODE` = `square` and `DRY_RUN` = `false`. The site then creates the booking in Square itself. Test with `DRY_RUN` = `true` first.
+
+## Adding your own photos and videos
+Drop files into `assets/uploads/` using the names in `assets/uploads/README.md` (for example `ceramic-1.jpg`, `ceramic-video.mp4`).
+They appear automatically in the "Photos & Video" tab of the Paint Enhancement + Ceramic Coating guide (tap **More info** on that card).
+Missing files show a branded "coming soon" placeholder. You can upload from GitHub's website (Add file > Upload files) or send the files to Claude.

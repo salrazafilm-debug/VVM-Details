@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="vvm-star" viewBox="0 0 24 24"><polygon points="12,1.5 15.1,8.6 22.8,9.3 17,14.4 18.7,22 12,18 5.3,22 7,14.4 1.2,9.3 8.9,8.6"/></symbol></svg>
 <div class="progress" id="progress"></div>
 
 <header class="nav" id="nav">
@@ -102,7 +103,9 @@
         </div>
       </article>
 
-      <article class="card feature diamond reveal">
+      <div class="flip reveal" id="paint-enhancement">
+        <div class="flip-inner">
+      <article class="card feature diamond flip-face front" id="pe-front">
         <span class="ribbon ice"><svg class="gemicon" viewBox="0 0 64 56" aria-hidden="true"><defs><linearGradient id="dg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2d78c4"/></linearGradient></defs><polygon points="16,2 48,2 62,20 32,54 2,20" fill="url(#dg2)" stroke="#fff" stroke-width="2"/><path d="M2 20h60M16 2l16 18 16-18M32 54L20 20M32 54l12-34" stroke="#fff" stroke-width="1.4" fill="none" opacity=".9"/></svg><span><b>Shiny+</b> Protection</span></span>
         <i class="sp s1"></i><i class="sp s2"></i><i class="sp s3"></i><i class="sp s4"></i><i class="sp s5"></i><i class="sp s6"></i>
         <div class="photo"><img src="assets/rangerover.jpg" alt="Black Range Rover after ceramic coating" loading="lazy"></div>
@@ -112,15 +115,101 @@
           <ul class="sizes"><li><button type="button" class="size" aria-label="Coupe, $775. Tap to flip."><span class="face front">Coupe</span><span class="face back">$775</span></button></li><li><button type="button" class="size" aria-label="Sedan, $850. Tap to flip."><span class="face front">Sedan</span><span class="face back">$850</span></button></li><li><button type="button" class="size" aria-label="SUV, $950. Tap to flip."><span class="face front">SUV</span><span class="face back">$950</span></button></li><li><button type="button" class="size" aria-label="Truck, $1,200. Tap to flip."><span class="face front">Truck</span><span class="face back">$1,200</span></button></li></ul>
           <p class="size-hint">Tap a size to see its price</p>
           <p class="desc">Full wash and decontamination, a <b class="ice-b">One-Step Paint Correction</b> to remove most swirls and defects, with a <span class="holo-ice">Ceramic Coating</span> for a super glossy reflection protected for the next 5&nbsp;years.</p>
-          <a href="#book" class="cta">Book my day</a>
+          <div class="cta-row"><a href="#book" class="cta">Book my day</a><button type="button" class="cta ghost" data-flip="open" aria-controls="pe-back" aria-expanded="false">More info</button></div>
         </div>
         <div class="card-foot">
-          <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="vvm-star" viewBox="0 0 24 24"><polygon points="12,1.5 15.1,8.6 22.8,9.3 17,14.4 18.7,22 12,18 5.3,22 7,14.4 1.2,9.3 8.9,8.6"/></symbol></svg>
           <svg class="fstar" style="--x:2.5%;--y:16%;--s:20px;--d:0s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:6.5%;--y:58%;--s:13px;--d:0.7s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:11%;--y:24%;--s:10px;--d:1.4s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:14.5%;--y:64%;--s:14px;--d:2.1s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:3%;--y:50%;--s:17px;--d:0.3s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:7%;--y:12%;--s:12px;--d:1.0s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:11.5%;--y:60%;--s:14px;--d:1.7s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:15%;--y:22%;--s:10px;--d:2.4s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg>
           <p class="foot-main"><svg class="fstar-in" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><span>Two-Step Correction Available</span><svg class="fstar-in" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg></p>
           <p class="foot-sub">For older vehicles / more severe condition</p>
+          <p class="foot-mail-wrap"><a class="foot-mail" href="mailto:vvm.detailing@gmail.com?subject=Two-step%20paint%20correction%20question">Email us for more questions</a><span class="foot-addr">vvm.detailing@gmail.com</span></p>
         </div>
       </article>
+      <article class="card feature diamond flip-face back" id="pe-back" aria-labelledby="pe-title">
+        <i class="sp s1"></i><i class="sp s2"></i><i class="sp s3"></i><i class="sp s4"></i><i class="sp s5"></i><i class="sp s6"></i>
+        <div class="pe-body">
+          <div class="pe-top">
+            <button type="button" class="pe-backbtn" data-flip="close">&larr; Back</button>
+            <span class="pe-badge"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M9 3l3 6 3-6M12 21L9 9M12 21l3-12"/></svg><span>Shiny+ Protection</span></span>
+          </div>
+          <p class="kicker">The full guide</p>
+          <h3 id="pe-title" tabindex="-1">Paint Enhancement + 5&nbsp;Year Ceramic Coating</h3>
+          <div class="pe-tabs" role="tablist" aria-label="Paint enhancement and ceramic coating guide">
+            <button type="button" role="tab" id="tab-pe" class="pe-tab" aria-selected="true" aria-controls="panel-pe">Paint Enhancement</button>
+            <button type="button" role="tab" id="tab-cc" class="pe-tab" aria-selected="false" aria-controls="panel-cc" tabindex="-1">Ceramic Coating</button>
+            <button type="button" role="tab" id="tab-why" class="pe-tab" aria-selected="false" aria-controls="panel-why" tabindex="-1">Why Correct First</button>
+            <button type="button" role="tab" id="tab-media" class="pe-tab" aria-selected="false" aria-controls="panel-media" tabindex="-1">Photos &amp; Video</button>
+          </div>
+
+          <section class="pe-panel" role="tabpanel" id="panel-pe" aria-labelledby="tab-pe">
+            <h4 class="pe-h">What is Paint Enhancement?</h4>
+            <p class="pe-p">Paint enhancement, also called paint correction, is the step that makes your paint look new again. Everyday washing, dust and sun leave fine swirl marks, light scratches and haze on the surface. These tiny defects scatter light, so the paint looks dull instead of deep and glossy.</p>
+            <p class="pe-p">We use a machine polisher and professional polishing compounds to carefully level a microscopic layer of clear coat. The surface becomes smooth and flat, so light reflects evenly. That is the depth, clarity and mirror-like shine you see.</p>
+            <ul class="pe-points">
+              <li><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a8 8 0 1 0 8 8"/><path d="M12 8a4 4 0 1 0 4 4"/><circle cx="12" cy="12" r=".8"/></svg></span>Removes swirl marks and fine scratches</li>
+              <li><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span>Restores gloss, depth and clarity</li>
+              <li><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>Prepares the paint to bond with the coating</li>
+            </ul>
+            <div class="pe-compare">
+              <div class="pe-cc"><span class="pe-tag">Included</span><h5>One-Step Correction</h5><p>One machine polishing stage that removes the majority of swirls and defects. Best for newer vehicles.</p></div>
+              <div class="pe-cc two"><span class="pe-tag">Upgrade</span><h5>Two-Step Correction</h5><p>A heavier cutting stage followed by a fine finishing polish for deeper defects. Available for older vehicles and more severe condition. Pricing reflects the condition of your paint.</p><a class="pe-mail" href="mailto:vvm.detailing@gmail.com?subject=Two-step%20paint%20correction%20question">Email us for more questions</a><span class="pe-addr">vvm.detailing@gmail.com</span></div>
+            </div>
+            <p class="pe-note"><b>Honest note:</b> a scratch that goes through the clear coat cannot be polished out. We will tell you what is realistic for your paint.</p>
+          </section>
+
+          <section class="pe-panel" role="tabpanel" id="panel-cc" aria-labelledby="tab-cc" hidden>
+            <h4 class="pe-h">What is a Ceramic Coating?</h4>
+            <p class="pe-p">A ceramic coating is a liquid nano-ceramic layer, made from silica, that we apply by hand to your paint after it has been corrected. As it cures, it forms a hard, transparent, super glossy layer that chemically bonds to the clear coat.</p>
+            <p class="pe-p">Wax and sealants sit on top of the paint and wear away. A ceramic coating bonds with the surface, so it does not wash off. Ours is a 5&nbsp;year coating.</p>
+            <div class="pe-cols">
+              <div class="pe-col"><h5>Wax</h5><p><b>Sits on top</b> of the paint</p><p class="life">Weeks to a few months</p></div>
+              <div class="pe-col"><h5>Paint Sealant</h5><p><b>Sits on top</b> of the paint</p><p class="life">A few months. Our free sealant lasts about 3&nbsp;months</p></div>
+              <div class="pe-col hl"><h5>Ceramic Coating</h5><p><b>Chemically bonds</b> to the paint</p><p class="life">Years. Ours is 5&nbsp;years</p></div>
+            </div>
+            <h4 class="pe-h pe-h2">What it does</h4>
+            <div class="pe-ben">
+              <div class="pe-b"><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span><div><h5>Chemical Bond Layer</h5><p>Bonds to the clear coat instead of sitting on it, so it does not wash away.</p></div></div>
+              <div class="pe-b"><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7s6 6.3 6 10.8a6 6 0 0 1-12 0C6 9 12 2.7 12 2.7z"/></svg></span><div><h5>Hydrophobic</h5><p>Water beads up and rolls off, pulling dirt with it.</p></div></div>
+              <div class="pe-b"><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg></span><div><h5>Stays Cleaner Longer</h5><p>A slick surface makes it harder for dirt, dust and road film to stick, so washes are faster and easier.</p></div></div>
+              <div class="pe-b"><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span><div><h5>Repels Contaminants</h5><p>Bird droppings, bug splatter and tree sap sit on the coating, not directly on your paint, so they are easier to remove.</p></div></div>
+              <div class="pe-b"><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><div><h5>Protects Your Paint</h5><p>Adds a hard layer that helps defend against UV rays, oxidation and light chemical staining.</p></div></div>
+              <div class="pe-b"><span class="pe-ic"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M9 3l3 6 3-6M12 21L9 9M12 21l3-12"/></svg></span><div><h5>Super Glossy Reflection</h5><p>A deep, mirror-like shine that lasts for years, not weeks.</p></div></div>
+            </div>
+            <p class="pe-note">A ceramic coating makes your vehicle easier to keep clean and helps protect the paint. It is not scratch-proof, and it still needs regular washing. We will show you exactly how to care for it.</p>
+          </section>
+
+          <section class="pe-panel" role="tabpanel" id="panel-why" aria-labelledby="tab-why" hidden>
+            <div class="pe-callout">
+              <svg class="fstar" style="--x:2.5%;--y:14%;--s:18px;--d:0s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:7%;--y:70%;--s:12px;--d:0.8s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:3%;--y:50%;--s:10px;--d:1.6s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:8%;--y:16%;--s:15px;--d:0.4s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar r" style="--x:12%;--y:74%;--s:11px;--d:1.2s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg>
+              <h4>The coating locks in whatever is under it.</h4>
+              <p>A ceramic coating bonds to the paint so strongly that it stays for years. That is great for protection, but it also means any swirls, scratches or haze left on the paint get sealed in with it. Fixing them later would mean removing the coating. That is why we always correct the paint first. It is what makes the finish flawless for the next 5&nbsp;years.</p>
+              <div class="pe-flow"><span class="pe-st">1 Correct</span><span class="pe-arrow" aria-hidden="true">&rarr;</span><span class="pe-st">2 Prep</span><span class="pe-arrow" aria-hidden="true">&rarr;</span><span class="pe-st">3 Coat</span></div>
+            </div>
+            <h4 class="pe-h pe-h2">Our process</h4>
+            <ol class="pe-steps">
+              <li><b>1</b><div><h5>Wash &amp; decontaminate</h5><p>Pre-wash, pH-balanced foam and a careful hand wash, then iron remover and a clay treatment to lift embedded contamination.</p></div></li>
+              <li><b>2</b><div><h5>Paint correction</h5><p>A one-step machine polish removes the majority of swirls and defects. Two-step available for older vehicles or more severe condition.</p></div></li>
+              <li><b>3</b><div><h5>Panel prep</h5><p>Each panel is cleaned and prepped so the coating bonds directly to the paint.</p></div></li>
+              <li><b>4</b><div><h5>Ceramic coating</h5><p>The 5&nbsp;year ceramic coating is applied by hand, panel by panel, and cures into a hard, glossy layer.</p></div></li>
+              <li><b>5</b><div><h5>Final walkthrough</h5><p>We review every step with you and quality-check the finish. Ready to correct any request.</p></div></li>
+            </ol>
+          </section>
+
+          <section class="pe-panel" role="tabpanel" id="panel-media" aria-labelledby="tab-media" hidden>
+            <h4 class="pe-h">See it in action</h4>
+            <div class="mslot mslot-video" data-video="ceramic-video" data-label="Video"><div class="ph"><span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span><b>Video</b><span>Coming soon</span></div></div>
+            <div class="pe-gallery">
+              <div class="mslot" data-img="ceramic-1" data-label="Before"><div class="ph"><svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><b>Before</b><span>Photo coming soon</span></div></div>
+              <div class="mslot" data-img="ceramic-2" data-label="After"><div class="ph"><svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><b>After</b><span>Photo coming soon</span></div></div>
+              <div class="mslot" data-img="ceramic-3" data-label="Water beading"><div class="ph"><svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><b>Water beading</b><span>Photo coming soon</span></div></div>
+              <div class="mslot" data-img="ceramic-4" data-label="Finished vehicle"><div class="ph"><svg class="ph-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><b>Finished vehicle</b><span>Photo coming soon</span></div></div>
+            </div>
+          </section>
+
+          <div class="pe-actions"><a href="#book" class="cta">Book my day</a><button type="button" class="cta ghost" data-flip="close">&larr; Back to card</button></div>
+        </div>
+      </article>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -163,12 +252,19 @@
   </section>
 
   <!-- BOOK -->
-  <section class="section book" id="book">
-    <div class="book-card reveal">
-      <h2 class="book-title">Book Now</h2>
-      <div class="booker" id="booker" aria-live="polite">
-        <p class="demo-badge" id="demoBadge" hidden>Demo preview: sample times, nothing is sent.</p>
-        <div id="bk"><p class="muted">Loading open times…</p></div>
+  <section class="book" id="book">
+    <div class="book-bg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><svg class="fstar" style="--x:4%;--y:12%;--s:18px;--d:0s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:9%;--y:62%;--s:11px;--d:0.6s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:15%;--y:30%;--s:9px;--d:1.2s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:22%;--y:80%;--s:13px;--d:1.8s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:30%;--y:10%;--s:10px;--d:2.2s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:68%;--y:8%;--s:12px;--d:0.3s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:76%;--y:72%;--s:10px;--d:0.9s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:84%;--y:22%;--s:16px;--d:1.5s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:91%;--y:58%;--s:12px;--d:2.1s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:96%;--y:12%;--s:9px;--d:0.5s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:5%;--y:88%;--s:12px;--d:1.1s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:94%;--y:90%;--s:14px;--d:0.2s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg></div>
+    <div class="book-wrap">
+      <div class="book-head reveal">
+        <i class="sp a"></i><i class="sp b"></i><i class="sp c"></i><i class="sp d"></i>
+        <h2 class="book-title">Book Now</h2>
+        <span class="book-line" aria-hidden="true"></span>
+      </div>
+      <div class="book-card reveal">
+        <div class="booker" id="booker" aria-live="polite">
+          <p class="demo-badge" id="demoBadge" hidden>Demo preview: sample times, nothing is sent.</p>
+          <div id="bk"><p class="muted">Loading open times…</p></div>
+        </div>
       </div>
     </div>
     <form name="booking-request" method="POST" data-netlify="true" netlify-honeypot="website" hidden>
@@ -179,10 +275,21 @@
 </main>
 
 <footer class="footer">
-  <img src="assets/logo.jpg" alt="VVM Details">
-  <p><b>VVM Details</b> · Chesapeake Beach, MD · Serving DC, MD &amp; VA</p>
-  <p class="small"><a href="tel:+12406019451">(240) 601-9451</a> · <a href="mailto:vvm.detailing@gmail.com">vvm.detailing@gmail.com</a></p>
-  <p class="small">© <span id="yr"></span> VVM Details. Every client. Every car. 100%.</p>
+  <div class="foot-stars" aria-hidden="true"><svg class="fstar" style="--x:6%;--y:20%;--s:14px;--d:0s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:12%;--y:70%;--s:10px;--d:0.8s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:20%;--y:35%;--s:9px;--d:1.5s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:80%;--y:30%;--s:10px;--d:0.4s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:88%;--y:72%;--s:14px;--d:1.1s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg><svg class="fstar" style="--x:94%;--y:18%;--s:11px;--d:1.9s" viewBox="0 0 24 24" aria-hidden="true"><use href="#vvm-star"/></svg></div>
+  <div class="foot-inner">
+    <span class="foot-logo"><img src="assets/logo.jpg" alt="VVM Details fox logo"></span>
+    <p class="foot-brand">VVM Details</p>
+    <p class="foot-tag">Every client. Every car. <span>100%.</span></p>
+    <p class="foot-area">Chesapeake Beach, MD &middot; Serving DC, MD &amp; VA</p>
+    <div class="foot-contact">
+      <a class="foot-pill" href="tel:+12406019451">Call or text (240) 601-9451</a>
+      <a class="foot-pill" href="mailto:vvm.detailing@gmail.com">vvm.detailing@gmail.com</a>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#services">Services</a><a href="#work">Our Work</a><a href="#how">How It Works</a><a href="#book">Book Now</a>
+    </nav>
+    <p class="foot-copy">&copy; <span id="yr"></span> VVM Details. All rights reserved.</p>
+  </div>
 </footer>
 
 <a href="#book" class="float-cta">Book Now</a>
