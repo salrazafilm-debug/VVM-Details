@@ -43,3 +43,6 @@ Netlify > **Domain management > Add a domain** > `vvmdetails.com` and follow the
 
 ## If you later want the site to create the booking in Square itself
 That needs Square Appointments Plus/Premium AND write permission on the token. Set `BOOKING_MODE` = `square` and `DRY_RUN` = `false`. Test with `DRY_RUN` = `true` first.
+
+## Working on it from your own computer
+Clone the repo (`git clone https://github.com/salrazafilm-debug/VVM-Details`), open the folder in the Claude Desktop app, or run `claude remote-control` in a terminal inside the folder. `CLAUDE.md` in the repo gives Claude everything it needs to continue.
