@@ -1,5 +1,6 @@
 const { loadCatalog, blocksByDay, json, fail, httpError, BOOKABLE } = require('../lib/square');
 const { slotsForDay } = require('../lib/rules');
+const { blocksWithHolds } = require('../lib/holds');
 
 exports.handler = async (event) => {
   try {
@@ -11,7 +12,7 @@ exports.handler = async (event) => {
 
     const [y, m] = month.split('-').map(Number);
     const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, '0')}`;
-    const blocks = await blocksByDay(`${month}-01`, `${next}-01`, catalog);
+    const blocks = await blocksWithHolds(event, await blocksByDay(`${month}-01`, `${next}-01`, catalog), month);
     const now = new Date();
     const total = new Date(Date.UTC(y, m, 0)).getUTCDate();
     const days = {};

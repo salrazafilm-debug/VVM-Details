@@ -16,7 +16,7 @@
 After the first deploy: Netlify > Forms > `booking-request` > Settings & notifications > Add email notification > `vvm.detailing@gmail.com`.
 
 ## 4. Use it
-A customer picks a real open time and you get an email. Add the booking in Square (you get Square's notifications and messages as usual). The time then disappears from the website automatically.
+A customer picks a real open time and taps **Book my day**. The time is held on the website immediately, so nobody else can pick it, and you get an email. Add the booking in Square (you get Square's notifications and messages as usual). Once it is in Square at the same start time, the website's hold is dropped automatically. Unconfirmed holds clear on their own after 3 days (`HOLD_DAYS`). Holds use Netlify's built-in storage (Blobs), which needs no setup. If storage is ever unavailable, the site still works, it just cannot hold times.
 
 ## 5. Your own domain (do this last)
 Netlify > Domain management > add `vvmdetails.com` and follow the DNS steps at your registrar.

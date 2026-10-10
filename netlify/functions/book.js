@@ -1,5 +1,6 @@
 const { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, BOOKABLE } = require('../lib/square');
 const { slotsForDay, localToUtc, fromHHMM } = require('../lib/rules');
+const { blocksWithHolds, addHold } = require('../lib/holds');
 const crypto = require('crypto');
 
 const clean = (s, max) => String(s || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, max);
@@ -25,7 +26,7 @@ exports.handler = async (event) => {
     // Re-check availability on the server so a stale page can never double-book.
     const nextDay = new Date(localToUtc(b.date, 24 * 60 + 60)); // safely into the next local day
     const toDate = nextDay.toISOString().slice(0, 10);
-    const blocks = await blocksByDay(b.date, toDate, catalog);
+    const blocks = await blocksWithHolds(event, await blocksByDay(b.date, toDate, catalog), b.date.slice(0, 7));
     const open = slotsForDay(b.date, blocks[b.date] || [], v, new Date());
     if (!open.includes(b.time)) throw httpError(409, 'Sorry, that time was just taken. Please pick another.');
 
@@ -34,6 +35,8 @@ exports.handler = async (event) => {
     // Free Square plans cannot create bookings through the API, so by default the
     // request goes to Netlify Forms (emailed to the owner) to be confirmed in Square.
     if (process.env.BOOKING_MODE !== 'square') {
+      const start = fromHHMM(b.time);
+      await addHold(event, { date: b.date, start, end: start + v.durationMin + (v.transitionMin || 0), kind: v.kind });
       if (process.env.URL) {
         const sent = await fetch(process.env.URL + '/', {
           method: 'POST', redirect: 'manual',

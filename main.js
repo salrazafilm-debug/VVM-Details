@@ -115,7 +115,7 @@ function render() {
         <label>Address and concerns<textarea id="f-notes" name="notes" rows="3" placeholder="Where we are coming to, and anything we should know"></textarea></label>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
-        <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Reserving…' : 'Reserve this time'}</button>
+        <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Booking…' : 'Book my day'}</button>
         <p class="muted small">No deposit. You pay after the detail.</p>
       </form>`;
   } else if (S.step === 'done') {
