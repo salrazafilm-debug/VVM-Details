@@ -147,34 +147,29 @@
     <div class="book-card reveal">
       <div class="book-copy">
         <p class="eyebrow">Book now</p>
-        <h2>Ready for your <em>Full Factory Reset?</em></h2>
-        <p>Serving DC, MD &amp; VA. Tell us about your ride and we’ll get back to you with a time and quote.</p>
-        <p class="direct">Or email us directly: <b id="email">vvm.detailing@gmail.com</b> <button type="button" class="copy" id="copy">Copy</button></p>
+        <h2>Pick your day. <em>We come to you.</em></h2>
+        <p>Serving DC, MD &amp; VA. Choose a service and an open time. No deposit, you pay after the detail.</p>
+        <ul class="contact">
+          <li>Call or text <a href="tel:+12406019451"><b>(240) 601-9451</b></a></li>
+          <li>Email <b id="email">vvm.detailing@gmail.com</b> <button type="button" class="copy" id="copy">Copy</button></li>
+        </ul>
       </div>
-      <form id="form" class="form">
-        <label>Name<input name="name" required autocomplete="name"></label>
-        <label>Phone<input name="phone" type="tel" required autocomplete="tel"></label>
-        <label>Vehicle<input name="vehicle" placeholder="e.g. 2022 Lexus IS 350" required></label>
-        <label>Service
-          <select name="service">
-            <option>The Full Factory Reset – from $265</option>
-            <option>Interior Reset – from $235</option>
-            <option>Exterior Reset – from $110</option>
-            <option>Paint Enhancement + 5 Year Ceramic Coating – from $775</option>
-          </select>
-        </label>
-        <label>Location / notes<textarea name="notes" rows="3" placeholder="City or ZIP, preferred day"></textarea></label>
-        <button class="btn primary" type="submit">Send Request</button>
-        <p class="form-note" id="formNote" hidden>If your email app didn’t open, send the details to <b>vvm.detailing@gmail.com</b>.</p>
-      </form>
+      <div class="booker" id="booker" aria-live="polite">
+        <p class="demo-badge" id="demoBadge" hidden>Demo preview: sample times, nothing is sent.</p>
+        <div id="bk"><p class="muted">Loading open times…</p></div>
+      </div>
     </div>
+    <form name="booking-request" method="POST" data-netlify="true" netlify-honeypot="website" hidden>
+      <input name="name"><input name="phone"><input name="email"><input name="vehicle"><textarea name="notes"></textarea>
+      <input name="service"><input name="date"><input name="time"><input name="website">
+    </form>
   </section>
 </main>
 
 <footer class="footer">
   <img src="assets/logo.jpg" alt="VVM Details">
   <p><b>VVM Details</b> · Chesapeake Beach, MD · Serving DC, MD &amp; VA</p>
-  <p class="small"><a href="mailto:vvm.detailing@gmail.com">vvm.detailing@gmail.com</a></p>
+  <p class="small"><a href="tel:+12406019451">(240) 601-9451</a> · <a href="mailto:vvm.detailing@gmail.com">vvm.detailing@gmail.com</a></p>
   <p class="small">© <span id="yr"></span> VVM Details. Every client. Every car. 100%.</p>
 </footer>
 
