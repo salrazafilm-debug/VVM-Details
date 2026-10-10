@@ -328,11 +328,5 @@ html,body{overflow-x:clip}
     radial-gradient(60% 50% at 60% 90%,rgba(228,87,46,.20),transparent 70%);
   background-size:180% 180%;animation:wave 9s ease-in-out infinite alternate}
 @keyframes wave{0%{background-position:0% 0%}50%{background-position:100% 40%}100%{background-position:30% 100%}}
-/* holographic sheen over the photos */
-.gold .photo{position:relative}
-.gold .photo::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.4;
-  background:linear-gradient(115deg,rgba(247,200,60,.0) 10%,rgba(247,200,60,.9) 28%,rgba(228,87,46,.8) 42%,rgba(79,143,240,.9) 58%,rgba(143,208,255,.8) 70%,rgba(240,214,60,.9) 82%,rgba(247,200,60,0) 95%);
-  background-size:250% 100%;animation:holoSheen 7s ease-in-out infinite alternate}
-@keyframes holoSheen{from{background-position:0% 0}to{background-position:100% 0}}
 .gold .ribbon{z-index:4}
-@media(prefers-reduced-motion:reduce){.gold,.gold .info::before,.gold .photo::after,.gold h3{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.gold,.gold .info::before,.gold h3{animation:none!important}}
