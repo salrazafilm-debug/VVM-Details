@@ -154,3 +154,8 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ink);backgr
 .steps{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .steps .pillar{display:flex;flex-direction:column;gap:6px}
 .steps .pillar b{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--pink-3);display:grid;place-items:center;font:800 1.2rem var(--display);font-style:normal;margin-bottom:6px}
+
+.sizes{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:4px 0 12px}
+.sizes li{display:flex;gap:6px;align-items:baseline;background:rgba(255,255,255,.65);border-radius:999px;padding:5px 12px;font-size:.85rem}
+.sizes b{font-weight:800}
+.price{font-weight:700}
