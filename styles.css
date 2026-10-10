@@ -396,3 +396,55 @@ html,body{overflow-x:clip}
 .ribbon .gemicon{width:48px;height:42px;filter:drop-shadow(0 4px 10px rgba(45,120,196,.6))}
 @media(max-width:900px){.ribbon .gemicon{width:40px;height:34px}}
 @media(prefers-reduced-motion:reduce){.diamond,.diamond::before,.diamond .info::before,.diamond h3,.diamond .kicker{animation:none!important}}
+
+
+/* ===== seamless holographic text loops =====
+   Each gradient is two identical cycles that start and end on the same colour. The tile is 200% wide and
+   slides exactly one tile (0% -> 200%), so the last frame equals the first and the loop never jumps or "turns off". */
+@keyframes holoFlow{from{background-position:0% 50%}to{background-position:200% 50%}}
+@keyframes foil{from{background-position:0% 50%}to{background-position:200% 50%}}
+.gold h3{background-image:linear-gradient(90deg,#fff3b8 0%,#f7c948 8.0%,#e4a11b 17.0%,#f7c948 27.0%,#ffb27a 33.0%,#b8d4ff 38.0%,#f7c948 44.0%,#fff3b8 50%,#f7c948 58.0%,#e4a11b 67.0%,#f7c948 77.0%,#ffb27a 83.0%,#b8d4ff 88.0%,#f7c948 94.0%,#fff3b8 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 7s linear infinite}
+.gold .kicker{background-image:linear-gradient(90deg,#8fd0ff 0%,#4f8ff0 10.0%,#c9b8ff 20.0%,#ffffff 26.0%,#4f8ff0 35.0%,#8fd0ff 50%,#4f8ff0 60.0%,#c9b8ff 70.0%,#ffffff 76.0%,#4f8ff0 85.0%,#8fd0ff 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 6s linear infinite}
+.holo-blue{background-image:linear-gradient(90deg,#8fd0ff 0%,#4f8ff0 10.0%,#c9b8ff 20.0%,#ffffff 26.0%,#4f8ff0 35.0%,#8fd0ff 50%,#4f8ff0 60.0%,#c9b8ff 70.0%,#ffffff 76.0%,#4f8ff0 85.0%,#8fd0ff 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 5s linear infinite}
+.diamond h3{background-image:linear-gradient(90deg,#0b2a4a 0%,#2d78c4 10.0%,#29b6f6 17.0%,#8a6bff 23.0%,#2d78c4 30.0%,#0b2a4a 39.0%,#2d78c4 45.0%,#0b2a4a 50%,#2d78c4 60.0%,#29b6f6 67.0%,#8a6bff 73.0%,#2d78c4 80.0%,#0b2a4a 89.0%,#2d78c4 95.0%,#0b2a4a 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 7s linear infinite}
+.diamond .kicker{background-image:linear-gradient(90deg,#2d78c4 0%,#29b6f6 12.5%,#8a6bff 25.0%,#0b2a4a 37.5%,#2d78c4 50%,#29b6f6 62.5%,#8a6bff 75.0%,#0b2a4a 87.5%,#2d78c4 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 6s linear infinite}
+
+/* diamond description: bold step name + glowing holographic "Ceramic Coating" */
+.card .desc .ice-b{font-weight:800;color:#0b2a4a;letter-spacing:.01em}
+.holo-ice{display:inline-block;white-space:nowrap;font-weight:900;letter-spacing:.01em;
+  background-image:linear-gradient(90deg,#1e90e6 0%,#7b5cff 15.0%,#1b5fb5 27.5%,#13a8f0 40.0%,#1e90e6 50%,#7b5cff 65.0%,#1b5fb5 77.5%,#13a8f0 90.0%,#1e90e6 100%);background-size:200% 100%;background-repeat:repeat;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:holoFlow 5s linear infinite,iceGlowPulse 3s ease-in-out infinite}
+@keyframes iceGlowPulse{
+  0%,100%{filter:drop-shadow(0 0 3px rgba(41,182,246,.65)) drop-shadow(0 0 8px rgba(138,107,255,.25))}
+  50%{filter:drop-shadow(0 0 7px rgba(41,182,246,.95)) drop-shadow(0 0 16px rgba(138,107,255,.55))}}
+
+/* diamond card: photo right, info left, full-width starry banner along the bottom */
+.card.diamond .info{grid-column:1;grid-row:1}
+.card.diamond .photo{grid-column:2;grid-row:1}
+.card-foot{grid-column:1/-1;grid-row:2;position:relative;z-index:2;overflow:hidden;text-align:center;color:#fff;
+  padding:24px clamp(64px,14%,150px);border-top:2px solid rgba(255,255,255,.9);
+  background-image:linear-gradient(90deg,#0b2a4a 0%,#2d78c4 25.0%,#0b2a4a 50%,#2d78c4 75.0%,#0b2a4a 100%);background-size:200% 100%;background-color:#0b2a4a;animation:holoFlow 12s linear infinite;
+  box-shadow:inset 0 0 50px rgba(143,208,255,.28)}
+.foot-main{display:flex;align-items:center;justify-content:center;gap:12px;font:900 clamp(.8rem,3.3vw,1.15rem)/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase}
+.foot-main span{text-wrap:balance;background-image:linear-gradient(90deg,#ffffff 0%,#9fd8ff 12.5%,#e1d4ff 25.0%,#8fe9ff 37.5%,#ffffff 50%,#9fd8ff 62.5%,#e1d4ff 75.0%,#8fe9ff 87.5%,#ffffff 100%);background-size:200% 100%;background-repeat:repeat;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holoFlow 6s linear infinite}
+.foot-sub{margin-top:8px;font:700 clamp(.68rem,2.6vw,.9rem)/1.3 var(--body);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.9);text-wrap:balance}
+.fstar,.fstar-in{fill:#fff;filter:drop-shadow(0 0 6px #7cc4ff);animation:starPulse 3s ease-in-out infinite;pointer-events:none}
+.fstar{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);animation-delay:var(--d)}
+.fstar.r{left:auto;right:var(--x)}
+.fstar-in{width:1.35em;height:1.35em;flex:none}
+@keyframes starPulse{0%,100%{transform:scale(.65);opacity:.5}50%{transform:scale(1.1);opacity:1}}
+@media(max-width:900px){
+  .card.diamond .photo{grid-column:1;grid-row:1}
+  .card.diamond .info{grid-column:1;grid-row:2}
+  .card-foot{grid-row:3;padding:22px 56px}
+}
+@media(prefers-reduced-motion:reduce){.holo-ice,.card-foot,.foot-main span,.fstar,.fstar-in,.gold .kicker,.holo-blue,.diamond .kicker{animation:none!important}}
+
+/* banner on phones: one line for the headline, fewer stars so nothing overlaps the text */
+@media(max-width:600px){
+  .card-foot{padding:22px 40px}
+  .foot-main{font-size:.74rem;letter-spacing:.08em}
+  .foot-main .fstar-in{display:none}
+  .foot-sub{font-size:.66rem;letter-spacing:.09em}
+  .card-foot > .fstar:nth-of-type(4),.card-foot > .fstar:nth-of-type(5),.card-foot > .fstar:nth-of-type(8),.card-foot > .fstar:nth-of-type(9){display:none}
+}
