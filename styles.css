@@ -764,3 +764,31 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 /* Full Factory Reset description: key words in bold white, no gold */
 .gold .desc{color:rgba(255,255,255,.88)}
 .gold .desc b{color:#fff;font-weight:800}
+
+/* =====================================================================
+   PINK -> NIGHT SKY: the Book Now background starts as the page pink, then
+   dissolves through rose and purple dusk into deep navy. Stars fade in below.
+   ===================================================================== */
+.book{margin-top:0;padding-top:clamp(190px,25vw,310px);background-repeat:no-repeat;
+  background-image:
+    radial-gradient(ellipse 75% 170px at 50% 140px,rgba(255,205,140,.42),transparent 72%),
+    linear-gradient(180deg,#e9b3b3 0px,#dca0b2 90px,#c486a8 180px,#9763a2 270px,#5e3f88 360px,#2c1b54 440px,rgba(23,16,42,0) 540px),
+    linear-gradient(180deg,#17102a 0%,#1a1030 45%,#0b2a4a 100%)}
+/* stars and glows only appear once the sky has darkened */
+.book-bg{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 150px,#000 430px);mask-image:linear-gradient(180deg,transparent 0,transparent 150px,#000 430px)}
+
+/* phones: a shorter dusk so the title sits on the dark part of the sky */
+@media(max-width:600px){
+  .book{padding-top:250px;
+    background-image:
+      radial-gradient(ellipse 80% 140px at 50% 110px,rgba(255,205,140,.42),transparent 72%),
+      linear-gradient(180deg,#e9b3b3 0px,#dca0b2 60px,#c486a8 120px,#9763a2 180px,#5e3f88 240px,#2c1b54 300px,rgba(23,16,42,0) 380px),
+      linear-gradient(180deg,#17102a 0%,#1a1030 45%,#0b2a4a 100%)}
+  .book-bg{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 110px,#000 330px);mask-image:linear-gradient(180deg,transparent 0,transparent 110px,#000 330px)}
+}
+
+/* the sky's glows and stars also fade out before the footer, so that edge is smooth too */
+.book-bg{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 150px,#000 430px,#000 calc(100% - 200px),transparent 100%);mask-image:linear-gradient(180deg,transparent 0,transparent 150px,#000 430px,#000 calc(100% - 200px),transparent 100%)}
+@media(max-width:600px){
+  .book-bg{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 110px,#000 330px,#000 calc(100% - 160px),transparent 100%);mask-image:linear-gradient(180deg,transparent 0,transparent 110px,#000 330px,#000 calc(100% - 160px),transparent 100%)}
+}
