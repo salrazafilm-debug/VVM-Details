@@ -848,3 +848,36 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 
 /* give the SHINY+ badge breathing room above the kicker */
 @media(min-width:900px){.card.feature.diamond.front .info{padding-top:clamp(78px,7.5vw,100px)}}
+
+
+/* =====================================================================
+   FULL FACTORY RESET: short checklist + gold savings line
+   ===================================================================== */
+.checks{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;text-align:left;width:100%;max-width:700px;margin:6px auto 18px;padding:20px 24px;border-radius:20px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16)}
+.checks li{display:flex;align-items:flex-start;gap:12px;font:600 1.04rem/1.45 var(--body);color:rgba(255,255,255,.92)}
+.checks b{font-weight:800;color:#fff}
+.ck{flex:none;display:grid;place-items:center;width:26px;height:26px;margin-top:1px;border-radius:50%;background:linear-gradient(135deg,#4f8ff0,#1f4fb5);box-shadow:0 0 12px rgba(79,143,240,.65)}
+.ck svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.checks .ie{margin:0 6px 0 0}
+.checks .ie-p{font-size:.74rem;padding:4px 11px}
+.save-line{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:6px 12px;margin:0 0 24px;padding:11px 26px;border-radius:999px;
+  border:2px solid rgba(255,212,90,.75);background:rgba(255,212,90,.09);box-shadow:0 0 24px rgba(247,200,60,.28)}
+.save-line b{font:900 clamp(1.05rem,2.4vw,1.35rem) var(--display);letter-spacing:.05em;color:#ffd45a;text-shadow:0 0 16px rgba(247,200,60,.65);white-space:nowrap}
+.save-line span{font:600 clamp(.9rem,1.8vw,1.05rem) var(--body);color:rgba(255,255,255,.9)}
+@media(max-width:600px){.checks{grid-template-columns:1fr;padding:16px 16px;gap:12px}}
+
+/* keep "bundle" on the same line as the INTERIOR + EXTERIOR pills where there is room */
+.checks .ie-p{padding:4px 9px;letter-spacing:.1em}
+.checks .ie{gap:5px;margin-right:4px}
+.checks li:first-child > span{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
+@media(max-width:1180px) and (min-width:601px){.checks{grid-template-columns:1fr}}
+
+/* first item spans the whole box so "INTERIOR + EXTERIOR bundle" sits on one line */
+.checks li:first-child{grid-column:1/-1}
+.checks li:first-child > span{font-weight:800;font-size:1.08rem}
+.checks li:first-child > span{flex-wrap:nowrap}
+@media(max-width:420px){.checks li:first-child > span{flex-wrap:wrap}}
+
+/* symmetrical rhythm: full row, two side by side, full row */
+@media(min-width:601px){.checks li:last-child{grid-column:1/-1}}
