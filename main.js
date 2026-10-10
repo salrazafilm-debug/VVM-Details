@@ -23,7 +23,7 @@ const io = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
 }), { threshold: .15 });
 document.querySelectorAll('.reveal').forEach((el, i) => {
-  el.style.transitionDelay = el.closest('.cards,.pillars,.gallery') ? (i % 4) * 90 + 'ms' : '';
+  el.style.transitionDelay = el.closest('.cards,.pillars,.gallery,.how-grid') ? [...el.parentElement.children].indexOf(el) * 110 + 'ms' : '';
   io.observe(el);
 });
 

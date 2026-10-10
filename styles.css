@@ -726,3 +726,37 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 #book .nodep{margin-top:4px;padding:16px 20px;border-radius:18px;text-align:center;font:700 clamp(1rem,2.4vw,1.1rem)/1.5 var(--body);color:#0b2a4a;
   background:rgba(255,255,255,.75);border:2px dashed #7cc4ff;text-wrap:balance}
 @media(prefers-reduced-motion:reduce){#book .sum,#book .sum-t{animation:none!important}}
+
+
+/* =====================================================================
+   HOW IT WORKS: four steps, each with its own color, icon and lively title
+   ===================================================================== */
+.how{max-width:1200px;padding-block:clamp(70px,9vw,110px)}
+.how-title{font:italic 900 clamp(2.4rem,6.6vw,4.4rem)/1.05 var(--display);letter-spacing:-.035em;text-wrap:balance;
+  background-image:linear-gradient(90deg,#1f4fb5 0%,#2f6fd8 10.0%,#c9301a 23.0%,#e04a1f 30.0%,#a86a00 40.0%,#1f4fb5 50%,#2f6fd8 60.0%,#c9301a 73.0%,#e04a1f 80.0%,#a86a00 90.0%,#1f4fb5 100%);background-size:200% 100%;background-repeat:repeat;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holoFlow 9s linear infinite}
+.how-grid{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:28px}
+.hstep{position:relative;z-index:1;overflow:hidden;display:flex;flex-direction:column;background:#fff;border-radius:26px;padding:34px 28px 34px;
+  box-shadow:0 12px 32px rgba(120,40,50,.16);transition:box-shadow .3s var(--ease)}
+.hstep:hover{box-shadow:0 20px 48px rgba(120,40,50,.28)}
+.hstep::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:var(--c)}
+.hs-ic{display:grid;place-items:center;width:62px;height:62px;border-radius:20px;margin-bottom:18px;color:#fff;background:var(--c);box-shadow:0 10px 24px var(--glow)}
+.hs-ic svg{width:32px;height:32px}
+.hs-k{font:800 .76rem var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--k);margin-bottom:6px}
+.hstep h3{font:italic 900 clamp(1.7rem,2.6vw,2.15rem)/1.08 var(--display);letter-spacing:-.025em;margin:0 0 14px;text-wrap:balance;
+  background-image:var(--t);background-size:100% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.hs-p{font:500 1.05rem/1.7 var(--body);color:#3a2b30;text-wrap:pretty}
+.hs-p b{font-weight:800;color:var(--ink)}
+.hstep.hstep-1{--c:linear-gradient(135deg,#4f8ff0,#1f4fb5);--glow:rgba(47,111,216,.45);--k:#1f4fb5;--t:linear-gradient(90deg,#1f4fb5,#4f8ff0)}
+.hstep.hstep-2{--c:linear-gradient(135deg,#ffe27a,#e0a010);--glow:rgba(224,160,16,.45);--k:#a86a00;--t:linear-gradient(90deg,#a86a00,#e0a010)}
+.hstep.hstep-3{--c:linear-gradient(135deg,#ff8a55,#d62f1f);--glow:rgba(214,47,31,.4);--k:#c9301a;--t:linear-gradient(90deg,#c9301a,#ff6a3d)}
+.hstep.hstep-4{--c:linear-gradient(135deg,#4f8ff0,#f0d63c 52%,#e4572e);--glow:rgba(228,87,46,.4);--k:#c9301a}
+.hstep.hstep-4 h3{background-image:linear-gradient(90deg,#1f4fb5 0%,#c9301a 17.0%,#d98a00 33.5%,#1f4fb5 50%,#c9301a 67.0%,#d98a00 83.5%,#1f4fb5 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 7s linear infinite}
+/* a thin colored line links the four steps on wide screens */
+@media(min-width:1040px){
+  .how-grid{gap:36px}
+  .how-grid::before{content:"";position:absolute;left:6%;right:6%;top:65px;height:5px;border-radius:5px;z-index:0;background:linear-gradient(90deg,#4f8ff0,#f0d63c 40%,#e4572e 70%,#f0d63c);opacity:.85}
+}
+@media(prefers-reduced-motion:reduce){.how-title,.hstep.hstep-4 h3{animation:none!important}}
+
+/* four across: reserve two lines for the title so every description starts at the same height */
+@media(min-width:1040px){.hstep h3{min-height:2.2em}}
