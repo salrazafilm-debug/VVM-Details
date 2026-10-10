@@ -115,14 +115,13 @@ function render() {
         <label>Address and concerns<textarea id="f-notes" name="notes" rows="3" placeholder="Where we are coming to, and anything we should know"></textarea></label>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
-        <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Sending…' : 'Request this time'}</button>
+        <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Reserving…' : 'Reserve this time'}</button>
         <p class="muted small">No deposit. You pay after the detail.</p>
       </form>`;
   } else if (S.step === 'done') {
-    const booked = S.result && S.result.mode === 'square';
-    html = `<div class="done"><h3>${booked ? 'You are booked!' : 'Request sent!'}</h3>
+    html = `<div class="done"><h3>Your booking is now reserved!</h3>
       <p><b>${esc(S.item.name)}</b> · ${esc(S.variation.label)}<br>${esc(longDate(S.date))} at ${fmtTime(S.time)}</p>
-      <p>${booked ? 'You will get a confirmation from Square shortly.' : 'We will text or email you shortly to confirm. Your time is not locked in until we confirm.'}</p>
+      <p>We will reach out shortly to answer any questions and confirm all details! Thank you!</p>
       ${contactLine}</div>`;
   }
   bk.innerHTML = html;
