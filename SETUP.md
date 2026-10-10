@@ -3,7 +3,7 @@
 Everything is built and tested. These steps need YOUR accounts, so they are the only things left.
 Never paste tokens or passwords into a chat. Put them only in Netlify's settings.
 
-## 1. Put the site on Netlify (free) ~5 min
+## 1. Put the site on Netlify (free): DONE (repo imported)
 1. Go to netlify.com and **Sign up with GitHub**.
 2. **Add new site > Import an existing project > GitHub** and choose `salrazafilm-debug/VVM-Details`, branch `master`.
 3. Leave every build setting as is (Netlify reads `netlify.toml`). Click **Deploy**.
@@ -11,7 +11,7 @@ Never paste tokens or passwords into a chat. Put them only in Netlify's settings
 
 ## 2. Get booking requests by email ~2 min
 Netlify > your site > **Forms** > `booking-request` > **Settings & notifications > Add notification > Email** > `vvm.detailing@gmail.com`.
-(The form appears after the first deploy and the first test booking.)
+(The form shows up here once the first deploy has finished. The only email that should receive requests is vvm.detailing@gmail.com.)
 
 ## 3. Connect Square so the calendar shows your real open times ~5 min
 1. developer.squareup.com > sign in > **Applications** > **+** (new app, any name, e.g. "VVM Website").
