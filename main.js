@@ -45,6 +45,14 @@ $('#form').addEventListener('submit', e => {
   e.preventDefault();
   const d = Object.fromEntries(new FormData(e.target));
   const body = `Name: ${d.name}\nPhone: ${d.phone}\nVehicle: ${d.vehicle}\nService: ${d.service}\nNotes: ${d.notes}`;
+  $('#formNote').hidden = false;
   location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Detail request – ' + d.name)}&body=${encodeURIComponent(body)}`;
 });
 $('#yr').textContent = new Date().getFullYear();
+
+$('#copy').addEventListener('click', async () => {
+  const b = $('#copy');
+  try { await navigator.clipboard.writeText(CONTACT_EMAIL); b.textContent = 'Copied'; }
+  catch { const r = document.createRange(); r.selectNodeContents($('#email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; }
+  setTimeout(() => b.textContent = 'Copy', 1800);
+});
