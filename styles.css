@@ -306,3 +306,33 @@ html,body{overflow-x:clip}
 @keyframes glowInk{0%,100%{box-shadow:0 0 10px rgba(255,255,255,.0),0 6px 18px rgba(26,18,20,.3)}50%{box-shadow:0 0 28px rgba(228,87,46,.65),0 6px 18px rgba(26,18,20,.35)}}
 @media(max-width:900px){.ribbon{top:14px;left:14px;padding:8px 16px 8px 10px;font-size:.8rem}.ribbon .crown{width:42px;height:32px}.ribbon b{font-size:1.2rem}}
 @media(prefers-reduced-motion:reduce){.ribbon,.cta{animation:none!important}}
+
+/* ===== GOLD: holographic blend of gold + logo colors ===== */
+/* border: gold flows into red-orange, blue, light blue and yellow, then back */
+.gold::before{padding:5px;background:conic-gradient(from var(--a),#fff3b8,#f7c948,#ff9d3d,#e4572e,#8a6bff 28%,#4f8ff0,#8fd0ff,#f0d63c,#f7c948,#fff3b8);filter:saturate(1.15)}
+/* outer glow drifts gold -> orange -> blue -> gold */
+.gold{animation:holoGlow 8s ease-in-out infinite}
+@keyframes holoGlow{
+  0%,100%{box-shadow:0 0 80px rgba(247,200,60,.5),0 30px 80px rgba(0,0,0,.35)}
+  33%{box-shadow:0 0 80px rgba(228,87,46,.5),0 30px 80px rgba(0,0,0,.35)}
+  66%{box-shadow:0 0 80px rgba(79,143,240,.5),0 30px 80px rgba(0,0,0,.35)}}
+/* title: gold foil with holographic glints */
+.gold h3{background-image:linear-gradient(100deg,#fff3b8 0%,#f7c948 18%,#e4a11b 36%,#f7c948 50%,#ffb27a 58%,#b8d4ff 64%,#f7c948 74%,#fff3b8 88%,#f7c948 100%);background-size:280% 100%;animation:foil 6s linear infinite}
+@keyframes foil{to{background-position:-280% 0}}
+/* soft holographic wave drifting across the dark panel */
+.gold .info{position:relative;isolation:isolate}
+.gold .info::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(60% 50% at 20% 25%,rgba(247,200,60,.22),transparent 70%),
+    radial-gradient(55% 45% at 85% 30%,rgba(79,143,240,.20),transparent 70%),
+    radial-gradient(60% 50% at 60% 90%,rgba(228,87,46,.20),transparent 70%);
+  background-size:180% 180%;animation:wave 9s ease-in-out infinite alternate}
+@keyframes wave{0%{background-position:0% 0%}50%{background-position:100% 40%}100%{background-position:30% 100%}}
+/* holographic sheen over the photos */
+.gold .photo{position:relative}
+.gold .photo::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.4;
+  background:linear-gradient(115deg,rgba(247,200,60,.0) 10%,rgba(247,200,60,.9) 28%,rgba(228,87,46,.8) 42%,rgba(79,143,240,.9) 58%,rgba(143,208,255,.8) 70%,rgba(240,214,60,.9) 82%,rgba(247,200,60,0) 95%);
+  background-size:250% 100%;animation:holoSheen 7s ease-in-out infinite alternate}
+@keyframes holoSheen{from{background-position:0% 0}to{background-position:100% 0}}
+.gold .ribbon{z-index:4}
+@media(prefers-reduced-motion:reduce){.gold,.gold .info::before,.gold .photo::after,.gold h3{animation:none!important}}
