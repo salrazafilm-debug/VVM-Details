@@ -35,10 +35,13 @@ exports.handler = async (event) => {
     // Free Square plans cannot create bookings through the API, so by default the
     // request goes to Netlify Forms (emailed to the owner) to be confirmed in Square.
     if (process.env.BOOKING_MODE !== 'square') {
-      const start = fromHHMM(b.time);
-      await addHold(event, { date: b.date, start, end: start + v.durationMin + (v.transitionMin || 0), kind: v.kind });
-      if (process.env.URL) {
-        const sent = await fetch(process.env.URL + '/', {
+      // 1) Send the request to the owner first. If this fails the customer is told, and no time is held.
+      const h = event.headers || {};
+      const origin = process.env.URL || (h.host ? `${h['x-forwarded-proto'] || 'https'}://${h.host}` : '');
+      if (!origin) throw httpError(503, 'We could not send your request. Please call or text us to book.');
+      let sent;
+      try {
+        sent = await fetch(origin + '/', {
           method: 'POST', redirect: 'manual',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
@@ -46,8 +49,11 @@ exports.handler = async (event) => {
             service: `${v.item} - ${v.label}`, date: b.date, time: b.time,
           }),
         });
-        if (sent.status >= 400) throw httpError(502, 'We could not send your request. Please call or text us to book.');
-      }
+      } catch (e) { console.error('form post failed:', e.message); }
+      if (!sent || sent.status >= 400) throw httpError(502, 'We could not send your request. Please call or text us to book.');
+      // 2) Only after the owner has been notified, hold the time so nobody else can pick it.
+      const start = fromHHMM(b.time);
+      await addHold(event, { date: b.date, start, end: start + v.durationMin + (v.transitionMin || 0), kind: v.kind });
       return json(200, { ...result, mode: 'request' });
     }
     if (process.env.DRY_RUN !== 'false') return json(200, { ...result, mode: 'square', dryRun: true });

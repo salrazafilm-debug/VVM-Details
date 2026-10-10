@@ -942,3 +942,10 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .pe-foot .pe-mail{margin-top:0}
 .pe-incl{display:inline-flex;align-items:center;gap:8px;padding:10px 20px 10px 14px;border-radius:999px;background:linear-gradient(135deg,#e3f2ff,#bfe0fb);border:2px solid #9fd0f3;color:#0b2a4a;font:900 .74rem var(--display);letter-spacing:.12em;text-transform:uppercase}
 .pe-incl svg{width:18px;height:18px;padding:3px;border-radius:50%;background:linear-gradient(135deg,#4f8ff0,#1f4fb5);fill:none;stroke:#fff;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* =====================================================================
+   FULL FACTORY RESET: bigger title, smaller SAVE HUGE (title always clearly the star)
+   ===================================================================== */
+.card.feature.gold h3{font-size:clamp(2.4rem,5.6vw,4.4rem);line-height:1.02;letter-spacing:-.035em;margin-bottom:20px}
+.checks .save-b{font-size:clamp(1.1rem,2.1vw,1.45rem)}
+@media(max-width:600px){.checks .save-b{font-size:1.2rem}}
