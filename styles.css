@@ -105,7 +105,7 @@ h2{font:italic 800 clamp(2rem,5vw,3.2rem)/1.12 var(--display);letter-spacing:-.0
 .gallery img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
 .gallery figure:hover img{transform:scale(1.1) rotate(.5deg)}
 .g1{grid-column:span 2;grid-row:span 2}.g2{grid-row:span 2}.g3{grid-column:span 1}
-.g6{grid-column:span 2}
+.g5,.g6{grid-column:span 2}
 
 /* book */
 .book-card{display:grid;grid-template-columns:1fr 1fr;gap:40px;background:#fff;border-radius:30px;padding:clamp(24px,5vw,56px);box-shadow:0 30px 70px rgba(120,40,50,.25)}
@@ -137,7 +137,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ink);backgr
   .links.open{opacity:1;pointer-events:auto;transform:none}
   .links a{width:100%;text-align:center}
   .gallery{grid-template-columns:1fr 1fr;grid-auto-rows:160px}
-  .g1{grid-column:span 2}.g6{grid-column:span 2}
+  .g1{grid-column:span 2}.g5,.g6{grid-column:span 2}
   .book-card{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
@@ -202,3 +202,5 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--ink);backgr
 .done h3{font:italic 800 1.8rem var(--display);letter-spacing:-.02em}
 .book-copy .copy{margin-left:4px}
 html,body{overflow-x:clip}
+
+.grid4{grid-template-rows:1fr 1fr}.grid4 img{min-height:0}

@@ -8,6 +8,9 @@ const CFG = {
   maxShortPerDay: 3,    // allowed only when every job that day is interior-only or exterior-only
   minNoticeHours: Number(process.env.MIN_NOTICE_HOURS || 12),
   maxDaysAhead: Number(process.env.MAX_DAYS_AHEAD || 365),
+  // A new job may only go before an existing booking if the free time before it is at least this long.
+  // Stops short jobs being squeezed in ahead of a late-morning booking.
+  minWindowMin: Number(process.env.MIN_WINDOW_MIN || 300),
 };
 
 const dtf = new Intl.DateTimeFormat('en-US', {
@@ -75,6 +78,11 @@ function slotsForDay(dateStr, dayBlocks, service, now, cfg = CFG) {
     if (localToUtc(dateStr, s).getTime() < earliest) continue;
     const e = s + length;
     if (dayBlocks.some(b => s < b.end && e > b.start)) continue;
+    const next = dayBlocks.filter(b => b.start >= s).sort((a, b) => a.start - b.start)[0];
+    if (next) {
+      const prevEnd = Math.max(0, ...dayBlocks.filter(b => b.end <= s).map(b => b.end));
+      if (next.start - Math.max(cfg.firstStart, prevEnd) < cfg.minWindowMin) continue;
+    }
     out.push(toHHMM(s));
   }
   return out;

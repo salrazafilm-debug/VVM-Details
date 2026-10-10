@@ -22,7 +22,7 @@ A customer picks a real open time and you get an email. Add the booking in Squar
 Netlify > Domain management > add `vvmdetails.com` and follow the DNS steps at your registrar.
 
 ## Rules built in (`netlify/lib/rules.js`)
-7:00 AM to 2:00 PM starts, every 30 min, no overlaps (Square durations plus transition time), max 2 bookings a day or 3 when all are interior-only or exterior-only, ceramic coating takes the whole day, any day of the week, 12 hours minimum notice, bookable up to a year ahead.
+7:00 AM to 2:00 PM starts, every 30 min, no overlaps (Square durations plus transition time), max 2 bookings a day or 3 when all are interior-only or exterior-only, ceramic coating takes the whole day, no new job is squeezed in before an existing booking unless there are at least 5 free hours ahead of it (`MIN_WINDOW_MIN`), any day of the week, 12 hours minimum notice, bookable up to a year ahead.
 
 ## If you move to Square Appointments Plus or Premium
 Set `BOOKING_MODE` = `square` and `DRY_RUN` = `false`. The site then creates the booking in Square itself. Test with `DRY_RUN` = `true` first.
