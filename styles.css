@@ -870,14 +870,35 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 /* keep "bundle" on the same line as the INTERIOR + EXTERIOR pills where there is room */
 .checks .ie-p{padding:4px 9px;letter-spacing:.1em}
 .checks .ie{gap:5px;margin-right:4px}
-.checks li:first-child > span{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
+.checks li:first-child > span:not(.ck){display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
 @media(max-width:1180px) and (min-width:601px){.checks{grid-template-columns:1fr}}
 
 /* first item spans the whole box so "INTERIOR + EXTERIOR bundle" sits on one line */
 .checks li:first-child{grid-column:1/-1}
-.checks li:first-child > span{font-weight:800;font-size:1.08rem}
-.checks li:first-child > span{flex-wrap:nowrap}
-@media(max-width:420px){.checks li:first-child > span{flex-wrap:wrap}}
+.checks li:first-child > span:not(.ck){font-weight:800;font-size:1.08rem}
+.checks li:first-child > span:not(.ck){flex-wrap:nowrap}
+@media(max-width:420px){.checks li:first-child > span:not(.ck){flex-wrap:wrap}}
 
 /* symmetrical rhythm: full row, two side by side, full row */
 @media(min-width:601px){.checks li:last-child{grid-column:1/-1}}
+
+
+/* =====================================================================
+   CHECKLIST: one column, perfectly aligned checks; SAVE HUGE is the last row (bigger, gold)
+   ===================================================================== */
+.checks{grid-template-columns:1fr;gap:0;max-width:640px;padding:8px 26px}
+.checks li,.checks li:first-child,.checks li:last-child{grid-column:auto}
+.checks li{align-items:center;min-height:56px;padding:10px 0;font:600 1.08rem/1.35 var(--body);border-bottom:1px solid rgba(255,255,255,.12)}
+.checks li:last-child{border-bottom:0}
+.checks .ck{margin:0;align-self:center;width:28px;height:28px}
+.checks .ck svg{width:16px;height:16px}
+.checks li:first-child > span:not(.ck){font-weight:700;font-size:1.08rem}
+.checks li > span:not(.ck){min-width:0}
+.checks .save-li{min-height:72px}
+.checks .save-li > span:not(.ck){display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px}
+.checks .save-b{font:900 clamp(1.35rem,3.2vw,1.8rem)/1.1 var(--display);letter-spacing:.04em;color:#ffd45a;text-shadow:0 0 18px rgba(247,200,60,.7);white-space:nowrap}
+.checks .save-s{font:600 1rem var(--body);color:rgba(255,255,255,.9)}
+@media(max-width:600px){.checks{padding:6px 16px}.checks li{font-size:1.02rem}.checks .save-b{font-size:1.4rem}}
+
+/* the check circle always centres its tick */
+.checks .ck{display:grid;place-items:center}
