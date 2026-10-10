@@ -27,16 +27,6 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
   io.observe(el);
 });
 
-if (matchMedia('(hover:hover)').matches) {
-  document.querySelectorAll('.tilt').forEach(c => {
-    c.addEventListener('mousemove', e => {
-      const b = c.getBoundingClientRect(), x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5;
-      c.style.transition = 'box-shadow .35s';
-      c.style.transform = `perspective(900px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-6px)`;
-    });
-    c.addEventListener('mouseleave', () => { c.style.transition = ''; c.style.transform = ''; });
-  });
-}
 
 $('#yr').textContent = new Date().getFullYear();
 
