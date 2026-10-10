@@ -174,3 +174,9 @@ bk.addEventListener('submit', async e => {
   catch { S.step = 'error'; S.services = []; }
   render();
 })();
+
+document.querySelectorAll('.sizes').forEach(ul => ul.addEventListener('click', e => {
+  const b = e.target.closest('.size'); if (!b) return;
+  const on = b.classList.toggle('flipped');
+  b.setAttribute('aria-pressed', on);
+}));
