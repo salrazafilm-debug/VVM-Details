@@ -90,17 +90,22 @@ function render() {
       ${S.date ? `<p class="picked"><b>${esc(longDate(S.date))}</b>, start time:</p><div class="slots">${(S.days[S.date] || []).map(t => `<button type="button" class="slot" data-act="time" data-t="${t}">${fmtTime(t)}</button>`).join('')}</div>` : ''}`;
   } else if (S.step === 'details') {
     html += `${back('date')}
-      <p class="picked"><b>${esc(S.item.name)}</b> · ${esc(S.variation.label)} · ${money(S.variation.priceCents)}<br>${esc(longDate(S.date))} at ${fmtTime(S.time)} · about ${dur(S.variation.minutes)}</p>
+      <div class="sum">
+        <p class="sum-k">Your booking</p>
+        <h3 class="sum-t">${esc(S.item.name)}</h3>
+        <p class="sum-v">${esc(S.variation.label)} · ${money(S.variation.priceCents)} · about ${dur(S.variation.minutes)}</p>
+        <p class="sum-d">${esc(longDate(S.date)).replace(/ (\d+)$/, '&nbsp;$1')} <span class="sum-at">at ${fmtTime(S.time)}</span></p>
+      </div>
       <form id="bform" class="form" novalidate>
         <label>Name<input id="f-name" name="name" required autocomplete="name"></label>
         <label>Phone<input id="f-phone" name="phone" type="tel" required autocomplete="tel"></label>
         <label>Email<input id="f-email" name="email" type="email" required autocomplete="email"></label>
         <label>Vehicle (year, make, model)<input id="f-vehicle" name="vehicle" required placeholder="e.g. 2022 Lexus IS 350"></label>
-        <label>Address &amp; concerns<span class="hint">Where should we arrive + any concerns or questions can let us know here - thank you so much!!! We will get back as soon as possible!</span><textarea id="f-notes" name="notes" rows="4" placeholder="Street address, city, ZIP"></textarea></label>
+        <label>Address &amp; concerns<span class="hint">Where should we arrive + any concerns or questions can let us know here - We will get back to you as soon as possible! Thank you!!!</span><textarea id="f-notes" name="notes" rows="4" placeholder="Street address, city, ZIP"></textarea></label>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
         <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Booking…' : 'Book my day'}</button>
-        <p class="muted small">No deposit. You pay after the detail.</p>
+        <p class="nodep">No deposit needed - we take payment only after we complete your service, thank you!</p>
       </form>`;
   } else if (S.step === 'done') {
     html = `<div class="done"><h3>Your booking is now reserved!</h3>

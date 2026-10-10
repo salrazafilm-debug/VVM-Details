@@ -695,3 +695,34 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 
 /* helper text under a form label */
 .form .hint{display:block;font-weight:500;font-size:.9rem;line-height:1.5;color:#33506e;text-wrap:pretty}
+
+
+/* =====================================================================
+   BOOKING DETAILS STEP: bolder type, big summary, clear payment note
+   ===================================================================== */
+#book .sum{position:relative;overflow:hidden;text-align:left;color:#fff;border-radius:26px;padding:clamp(22px,4vw,36px);margin:8px 0 30px;
+  background-image:linear-gradient(90deg,#0b2a4a 0%,#2d78c4 25.0%,#0b2a4a 50%,#2d78c4 75.0%,#0b2a4a 100%);background-size:200% 100%;background-color:#0b2a4a;animation:holoFlow 12s linear infinite;
+  border:2px solid rgba(255,255,255,.85);box-shadow:inset 0 0 60px rgba(143,208,255,.28),0 16px 40px rgba(11,42,74,.38)}
+#book .sum-k{font:800 .76rem var(--display);letter-spacing:.22em;text-transform:uppercase;color:#8fd0ff;margin-bottom:10px}
+#book .sum-t{font:italic 900 clamp(1.8rem,5.2vw,2.8rem)/1.08 var(--display);letter-spacing:-.025em;text-wrap:balance;margin:0 0 12px;
+  background-image:linear-gradient(90deg,#ffffff 0%,#9fd8ff 12.5%,#e1d4ff 25.0%,#8fe9ff 37.5%,#ffffff 50%,#9fd8ff 62.5%,#e1d4ff 75.0%,#8fe9ff 87.5%,#ffffff 100%);background-size:200% 100%;background-repeat:repeat;-webkit-background-clip:text;background-clip:text;color:transparent;animation:holoFlow 7s linear infinite;
+  filter:drop-shadow(0 0 14px rgba(143,208,255,.45))}
+#book .sum-v{font:700 clamp(1.05rem,2.6vw,1.3rem)/1.4 var(--body);color:rgba(255,255,255,.95)}
+#book .sum-d{margin-top:18px;padding-top:18px;border-top:1.5px solid rgba(255,255,255,.28);font:900 clamp(1.4rem,4.2vw,2.1rem)/1.2 var(--display);letter-spacing:-.015em;color:#fff;text-wrap:balance}
+#book .sum-at{display:inline-block;color:#ffe27a;text-shadow:0 0 18px rgba(247,200,60,.65)}
+
+/* service line above the calendar: same bolder voice */
+#book .picked{font:700 clamp(1.05rem,2.6vw,1.25rem)/1.45 var(--body);color:#0b2a4a;margin:10px 0 16px}
+#book .picked b{font-weight:900;font-family:var(--display);letter-spacing:-.01em}
+
+/* form: stronger labels and bigger, bolder text in the boxes */
+#book .form{gap:22px}
+#book .form label{gap:8px;font:800 .84rem var(--display);letter-spacing:.1em;text-transform:uppercase;color:#0b2a4a}
+#book .form input,#book .form select,#book .form textarea{font:600 1.12rem/1.4 var(--body);letter-spacing:.005em;color:#0b2a4a;padding:17px 18px;border:2px solid #9fd0f3;background:#fff;border-radius:18px;text-transform:none}
+#book .form input::placeholder,#book .form textarea::placeholder{color:#6f89a6;font-weight:500}
+#book .form input:focus,#book .form textarea:focus{border-color:#2d78c4;box-shadow:0 0 0 4px rgba(45,120,196,.2);background:#fff}
+#book .form .hint{display:block;margin:-2px 0 2px;font:600 1rem/1.55 var(--body);letter-spacing:0;text-transform:none;color:#1d3f63;text-wrap:pretty}
+#book .form .err{font:800 1rem/1.4 var(--body);color:#b3261e}
+#book .nodep{margin-top:4px;padding:16px 20px;border-radius:18px;text-align:center;font:700 clamp(1rem,2.4vw,1.1rem)/1.5 var(--body);color:#0b2a4a;
+  background:rgba(255,255,255,.75);border:2px dashed #7cc4ff;text-wrap:balance}
+@media(prefers-reduced-motion:reduce){#book .sum,#book .sum-t{animation:none!important}}
