@@ -792,3 +792,59 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 @media(max-width:600px){
   .book-bg{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 110px,#000 330px,#000 calc(100% - 160px),transparent 100%);mask-image:linear-gradient(180deg,transparent 0,transparent 110px,#000 330px,#000 calc(100% - 160px),transparent 100%)}
 }
+
+
+/* =====================================================================
+   FULL FACTORY RESET + PAINT ENHANCEMENT: wider text, shorter cards
+   ===================================================================== */
+@media(min-width:900px){
+  .card.feature.gold{grid-template-columns:.8fr 1.3fr}
+  .card.feature.diamond.front{grid-template-columns:1.3fr .8fr}
+  .card.feature .info{padding:clamp(24px,3vw,42px)}
+}
+.gold .desc,.diamond .desc{max-width:none}
+.gold .kicker{max-width:none}
+
+/* "SAVE HUGE $$$": gold, bold, easy to read */
+.gold .desc b.save{display:inline-block;white-space:nowrap;font-size:1.14em;font-weight:900;letter-spacing:.04em;color:#ffd45a;text-shadow:0 0 16px rgba(247,200,60,.6)}
+
+/* INTERIOR + EXTERIOR: two glowing outlined pills with shimmering blue text */
+.ie{display:inline-flex;align-items:center;gap:8px;vertical-align:middle;margin:3px 6px 3px 0;white-space:nowrap}
+.ie-p{display:inline-block;padding:5px 15px;border-radius:999px;font:900 .84rem/1.2 var(--display);letter-spacing:.14em;border:2px solid transparent;
+  background:linear-gradient(#0f1a2e,#0f1a2e) padding-box,conic-gradient(from 20deg,#8fd0ff,#4f8ff0,#c9b8ff,#ffffff,#4f8ff0,#8fd0ff) border-box;box-shadow:0 0 16px rgba(79,143,240,.5)}
+.ie-plus{font:900 1rem var(--display);color:#8fd0ff;text-shadow:0 0 12px rgba(143,208,255,.85)}
+
+/* =====================================================================
+   TRANSITION: a glowing holographic line between the pink page and Book Now
+   (replaces the dusk fade)
+   ===================================================================== */
+.book{overflow:visible;margin-top:0;padding-top:clamp(110px,14vw,170px);background-repeat:no-repeat;
+  background-image:linear-gradient(180deg,#17102a 0%,#1a1030 45%,#0b2a4a 100%)}
+.book-bg{overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 200px),transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 200px),transparent 100%)}
+.book::before{content:"";position:absolute;left:0;right:0;top:-4px;height:8px;z-index:3;pointer-events:none;
+  background-image:linear-gradient(90deg,#4f8ff0 0%,#f0d63c 10.0%,#e4572e 20.0%,#f7c948 30.0%,#8a6bff 40.0%,#4f8ff0 50%,#f0d63c 60.0%,#e4572e 70.0%,#f7c948 80.0%,#8a6bff 90.0%,#4f8ff0 100%);background-size:200% 100%;background-repeat:repeat;animation:holoFlow 6s linear infinite;
+  box-shadow:0 0 22px 3px rgba(247,200,60,.6),0 0 64px 8px rgba(79,143,240,.42)}
+.book>.sp.edge{top:-17px;width:var(--e);height:var(--e);z-index:4}
+@media(prefers-reduced-motion:reduce){.book::before{animation:none!important}}
+
+
+/* =====================================================================
+   BOOK NOW: one color. Yellow title with a soft glow around it (no rainbow)
+   ===================================================================== */
+.book-title{background-image:none;-webkit-background-clip:border-box;background-clip:border-box;color:#ffd84a;filter:none;animation:titleGlow 3.6s ease-in-out infinite alternate;
+  text-shadow:0 0 14px rgba(255,216,74,.85),0 0 38px rgba(255,200,40,.6),0 0 84px rgba(247,180,30,.4)}
+@keyframes titleGlow{
+  from{text-shadow:0 0 12px rgba(255,216,74,.7),0 0 32px rgba(255,200,40,.45),0 0 70px rgba(247,180,30,.3)}
+  to{text-shadow:0 0 18px rgba(255,226,110,.95),0 0 48px rgba(255,200,40,.72),0 0 104px rgba(247,180,30,.5)}}
+/* the bar under the title and the top line: gold only */
+.book-line{background-image:linear-gradient(90deg,rgba(247,201,72,0),#f7c948 22%,#ffe9a0 50%,#f7c948 78%,rgba(247,201,72,0));background-size:100% 100%;animation:none;
+  box-shadow:0 0 22px rgba(247,201,72,.7),0 0 46px rgba(247,201,72,.4)}
+.book::before{background-image:linear-gradient(90deg,#f7c948 0%,#ffe9a0 25.0%,#f7c948 50%,#ffe9a0 75.0%,#f7c948 100%);animation:holoFlow 9s linear infinite;
+  box-shadow:0 0 22px 3px rgba(247,201,72,.65),0 0 70px 8px rgba(247,201,72,.35)}
+@media(prefers-reduced-motion:reduce){.book-title{animation:none!important}}
+
+/* soft glow that follows the faded tips of the bar (a box-shadow leaves dark dots there) */
+.book-line{box-shadow:none;filter:drop-shadow(0 0 8px rgba(247,201,72,.9)) drop-shadow(0 0 20px rgba(247,201,72,.5))}
+
+/* give the SHINY+ badge breathing room above the kicker */
+@media(min-width:900px){.card.feature.diamond.front .info{padding-top:clamp(78px,7.5vw,100px)}}
