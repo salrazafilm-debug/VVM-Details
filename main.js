@@ -106,6 +106,7 @@ function render() {
         ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
         <button class="btn primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Booking…' : 'Book my day'}</button>
         <p class="nodep">No deposit needed - we take payment only after we complete your service, thank you!</p>
+        <p class="consent">By booking, you agree to our <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>
       </form>`;
   } else if (S.step === 'done') {
     html = `<div class="done"><h3>Your booking is now reserved!</h3>
