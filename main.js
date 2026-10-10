@@ -1,5 +1,5 @@
 // Edit these with real contact info
-const CONTACT_EMAIL = "info@vvmdetails.com";
+const CONTACT_EMAIL = "vvm.detailing@gmail.com";
 
 const $ = s => document.querySelector(s);
 const nav = $('#nav'), prog = $('#progress'), cta = $('.float-cta'), bg = $('.statement-bg');
