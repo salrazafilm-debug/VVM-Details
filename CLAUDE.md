@@ -48,9 +48,10 @@ Never put tokens or secrets in the repo or in chat. Never write to the owner's S
 - The 404 page uses root-relative links because Netlify serves it at any depth. Keep it that way.
 
 ## Open items (as of 2026-10-11)
-1. Square catalog (owner does it; connector is read-only): Full Factory Reset **Mini-Van is $360 in Square, must be $410** (site says $410); Interior Reset **has no Truck variation**, add Truck $255, 4 hrs, online-bookable (site already shows it). Until fixed the calendar shows Square's data and does not match the cards.
+1. Square catalog (owner does it; connector is read-only and the dashboard UI edits are blocked for Claude): Full Factory Reset Mini-Van is now **$410** (fixed 2026-10-11, verified). Interior Reset **still has no Truck variation**: owner must add Truck $255, 4 hrs, assigned to them, online-bookable (the site already shows it). Until then the booking calendar has no Interior Reset Truck.
 2. Netlify: repo is imported but a deploy could not be confirmed (no status on the GitHub commit). Still needed: confirm deploy published, Forms email notification to vvm.detailing@gmail.com, add the three env vars (the owner pastes the Square token, never Claude), test booking, then point vvmdetails.com (last).
-3. Terms page: waiting on the owner's answers to the `[YOUR CALL]` items in `drafts/terms-draft.md`, then build `terms.html` and link it beside Privacy (footer and booking consent line).
+3. Terms page: `terms.html` is built (linked from footers, sitemap and the booking consent line) from the safe defaults in `drafts/terms-draft.md`, but it needs the owner's review before it goes live: 24 hour notice, weather policy and section 10 (damage/liability, have it reviewed) are suggested defaults; payment methods, water/power, late fees, warranty and coating aftercare days are deliberately NOT stated. Add them once the owner answers the `[YOUR CALL]` items.
+3b. **Do not push to master yet.** The owner wants ONE final deploy (Netlify free plan: 15 credits per deploy, 300 a month). Pending work lives on the local branch `final-polish`. Before the final push: owner adds `SQUARE_ACCESS_TOKEN` in Netlify, then merge to master and push once, check Netlify > Forms shows `booking-request`, Make the project public, test booking, DNS last.
 4. Replace screenshot-crop photos with the owner's originals; fill `ceramic-1..4` and `ceramic-video` slots.
 5. Ideas not done: customer reviews section, Google Business link, analytics (would require updating privacy.html).
 
