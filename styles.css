@@ -974,6 +974,14 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .legal-sec li::marker{color:#e4572e}
 .legal-sec b{font-weight:800;color:var(--ink)}
 .legal-sec a{color:#1f4fb5;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+/* Key policy callout (Maintenance Plan): gold panel so it cannot be missed */
+.legal-sec.legal-key{background:linear-gradient(135deg,#fff8d6 0%,#ffe9a0 55%,#fff3c4 100%);border:3px solid #f0b90b;border-radius:24px;padding:clamp(22px,4vw,36px);box-shadow:0 14px 34px rgba(217,142,11,.28)}
+.legal-tag{display:inline-block;margin-bottom:12px;padding:7px 15px;border-radius:999px;background:var(--ink);color:#ffe27a;font:900 .78rem/1 var(--body);letter-spacing:.14em;text-transform:uppercase}
+.legal-sec.legal-key h2{font-weight:900;font-size:clamp(1.9rem,5vw,2.8rem);letter-spacing:-.03em;color:var(--ink);margin-bottom:14px}
+.legal-sec .legal-big{font:800 clamp(1.2rem,3.2vw,1.55rem)/1.4 var(--body);color:var(--ink)}
+.legal-sec.legal-key li{font-weight:700;color:var(--ink)}
+.legal-sec.legal-key li::marker{color:#c97a00}
+.legal-sec.legal-key a{color:#1f4fb5}
 .legal-wrap.nf{text-align:center;display:grid;justify-items:center;gap:14px;min-height:55vh;align-content:center}
 .legal-foot{margin-top:0}
 @media(prefers-reduced-motion:reduce){.legal-back{transition:none}}
