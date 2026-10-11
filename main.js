@@ -324,20 +324,25 @@ document.querySelectorAll('.flip').forEach(w => {
   let timer;
   const inert = (el, on) => { el.toggleAttribute('inert', on); el.setAttribute('aria-hidden', String(on)); };
   inert(back, true);
+  // Phones and tablets: no 3D flip (tall rotated layers are unreliable on iOS). The faces simply swap with a fade.
+  const flat = () => matchMedia('(max-width:900px)').matches;
   function set(open) {
     clearTimeout(timer);
-    if (open) { inner.style.height = front.offsetHeight + 'px'; inner.offsetHeight; inner.style.height = back.offsetHeight + 'px'; }
-    else { inner.style.height = back.offsetHeight + 'px'; inner.offsetHeight; inner.style.height = front.offsetHeight + 'px'; timer = setTimeout(() => { if (!w.classList.contains('flipped')) inner.style.height = ''; }, reduce ? 0 : 750); }
+    const f = flat();
+    if (!f) {
+      if (open) { inner.style.height = front.offsetHeight + 'px'; inner.offsetHeight; inner.style.height = back.offsetHeight + 'px'; }
+      else { inner.style.height = back.offsetHeight + 'px'; inner.offsetHeight; inner.style.height = front.offsetHeight + 'px'; timer = setTimeout(() => { if (!w.classList.contains('flipped')) inner.style.height = ''; }, reduce ? 0 : 750); }
+    } else inner.style.height = '';
     w.classList.toggle('flipped', open);
     inert(front, open); inert(back, !open);
     w.querySelectorAll('[data-flip="open"]').forEach(b => b.setAttribute('aria-expanded', String(open)));
-    w.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-    setTimeout(() => (open ? back.querySelector('h3') : w.querySelector('[data-flip="open"]')).focus({ preventScroll: true }), reduce ? 0 : 750);
+    w.scrollIntoView({ behavior: reduce || f ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => (open ? back.querySelector('h3') : w.querySelector('[data-flip="open"]')).focus({ preventScroll: true }), reduce || f ? 0 : 750);
   }
   w.addEventListener('click', e => { const b = e.target.closest('[data-flip]'); if (b) set(b.dataset.flip === 'open'); });
   w.addEventListener('keydown', e => { if (e.key === 'Escape' && w.classList.contains('flipped')) set(false); });
   // keep the card height in step with the open guide (tab changes, images loading, window resize)
-  new ResizeObserver(() => { if (w.classList.contains('flipped')) inner.style.height = back.offsetHeight + 'px'; }).observe(back);
+  new ResizeObserver(() => { if (!w.classList.contains('flipped')) return; inner.style.height = flat() ? '' : back.offsetHeight + 'px'; }).observe(back);
 });
 
 /* ---------- guide tabs ---------- */

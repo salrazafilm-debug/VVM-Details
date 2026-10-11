@@ -1231,7 +1231,7 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 
 /* Phones: tighter, wider-looking cards; photos zoomed out so the whole car shows */
 @media(max-width:600px){
-  .card.feature.gold .photo.grid4{aspect-ratio:1/1;min-height:0}
+  .card.feature.gold .photo.grid4{aspect-ratio:3/4;min-height:0}
   .card.feature.gold .photo.grid4 img{object-fit:cover}
   .card .info{padding:18px 16px 22px}
   .card h3{font-size:clamp(1.45rem,7vw,1.8rem);margin-bottom:8px}
@@ -1314,4 +1314,17 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 }
 
 /* phones: Full Factory Reset keeps the 2x2 photo grid with the crown badge top-left (owner preference) */
-@media(max-width:600px){.card.feature.gold .photo.grid4{aspect-ratio:1/1}.card.feature.gold .ribbon{top:12px;left:12px;padding:7px 14px 7px 10px;font-size:.78rem}.card.feature.gold .ribbon .crown{width:38px;height:29px}}
+@media(max-width:600px){.card.feature.gold .photo.grid4{aspect-ratio:3/4}.card.feature.gold .ribbon{top:12px;left:12px;padding:7px 14px 7px 10px;font-size:.78rem}.card.feature.gold .ribbon .crown{width:38px;height:29px}}
+
+
+/* "More info" on phones and tablets: swap the faces with a fade instead of a 3D flip (iOS-safe, no height animation) */
+@media(max-width:900px){
+  .flip{perspective:none}
+  .flip-inner{transform:none!important;transform-style:flat;transition:none;height:auto!important}
+  .flip-face{-webkit-backface-visibility:visible;backface-visibility:visible}
+  .flip .card.feature.flip-face.back{position:relative;transform:none;display:none}
+  .flip.flipped .card.feature.flip-face.back{display:block;animation:faceIn .35s ease both}
+  .flip.flipped .card.flip-face.front{display:none}
+}
+@keyframes faceIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(max-width:900px) and (prefers-reduced-motion:reduce){.flip.flipped .card.feature.flip-face.back{animation:none}}
