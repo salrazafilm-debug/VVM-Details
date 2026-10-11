@@ -373,6 +373,8 @@ function loadMedia(root = document) {
     firstThatLoads(VID_EXT.map(x => `${base}.${x}`), (src, cb) => { const v = document.createElement('video'); v.preload = 'metadata'; v.onloadedmetadata = () => cb(true); v.onerror = () => cb(false); v.src = src; }, src => {
       if (!src) return;
       const v = document.createElement('video'); v.src = src; v.controls = true; v.playsInline = true; v.preload = 'metadata'; v.setAttribute('aria-label', slot.dataset.label || 'Video');
+      v.muted = true; v.loop = true; v.preload = 'auto';
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) new IntersectionObserver(es => { es[0].isIntersecting ? v.play().catch(() => {}) : v.pause(); }, { threshold: .4 }).observe(v);
       slot.replaceChildren(v); slot.classList.add('filled');
     });
   });
