@@ -1328,3 +1328,8 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 }
 @keyframes faceIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(max-width:900px) and (prefers-reduced-motion:reduce){.flip.flipped .card.feature.flip-face.back{animation:none}}
+
+/* Full Factory Reset: one finished 3:4 photo (owner-made collage) */
+.card.feature.gold .photo.single{display:block;aspect-ratio:3/4;min-height:0}
+.card.feature.gold .photo.single img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+@media(min-width:901px){.card.feature.gold .photo.single{aspect-ratio:auto;min-height:100%}}
