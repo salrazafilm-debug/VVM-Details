@@ -271,7 +271,11 @@
       <h2>Reviews</h2>
       <p class="rev-sum" id="revSum" hidden></p>
     </div>
-    <div class="rev-grid" id="revGrid"></div>
+    <div class="rev-wrap">
+      <button type="button" class="rev-arrow" data-dir="-1" aria-label="Previous reviews">&lsaquo;</button>
+      <div class="rev-viewport" id="revViewport" tabindex="0" aria-label="Customer reviews"><div class="rev-track" id="revGrid"></div></div>
+      <button type="button" class="rev-arrow" data-dir="1" aria-label="Next reviews">&rsaquo;</button>
+    </div>
     <div class="rev-cta reveal" id="revCta"></div>
   </section>
 

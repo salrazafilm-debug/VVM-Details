@@ -386,9 +386,10 @@ function loadMedia(root = document) {
   try { own = await (await fetch('reviews.json', { cache: 'no-cache' })).json(); } catch {}
   try { g = (await (await fetch('/api/reviews')).json()).google; } catch {}
   const stars = n => '★'.repeat(Math.max(1, Math.min(5, Math.round(n)))) + '☆'.repeat(5 - Math.max(1, Math.min(5, Math.round(n))));
-  const card = (r, src) => `<article class="rev reveal"><p class="rev-stars" aria-label="${r.rating || 5} out of 5 stars">${stars(r.rating || 5)}</p><p class="rev-text">${esc(r.text)}</p><p class="rev-by"><b>${esc(r.name)}</b>${r.car ? ` · ${esc(r.car)}` : ''}${r.when ? ` · ${esc(r.when)}` : ''}<span class="rev-src">${src}</span></p></article>`;
+  let photoN = 0;
+  const card = (r, src) => `<article class="rev">${r.photo ? `<img class="rev-photo" src="${esc(r.photo)}" alt="${esc(r.name)}\u2019s car" loading="${photoN++ < 3 ? 'eager' : 'lazy'}" decoding="async">` : ''}<div class="rev-body"><p class="rev-stars" aria-label="${r.rating || 5} out of 5 stars">${stars(r.rating || 5)}</p><p class="rev-text">${esc(r.text)}</p><p class="rev-by"><b>${esc(r.name)}</b>${r.car ? ` \u00b7 ${esc(r.car)}` : ''}${r.when ? ` \u00b7 ${esc(r.when)}` : ''}<span class="rev-src">${src}</span></p></div></article>`;
   const all = [...(g && g.reviews ? g.reviews.map(r => card(r, 'Google')) : []), ...(own.reviews || []).filter(r => r && r.text).map(r => card(r, r.source || 'VVM client'))];
-  grid.innerHTML = all.length ? all.join('') : `<article class="rev rev-empty reveal"><p class="rev-stars" aria-hidden="true">★★★★★</p><p class="rev-text">Finished your detail? We would love to hear how we did!</p></article>`;
+  grid.innerHTML = all.length ? all.join('') : `<article class="rev rev-empty"><div class="rev-body"><p class="rev-stars" aria-hidden="true">★★★★★</p><p class="rev-text">Finished your detail? We would love to hear how we did!</p></div></article>`;
   const gs = (g && g.rating) ? g : own.googleSummary;   // live Google numbers when connected, otherwise the saved snapshot in reviews.json
   if (gs && gs.rating) { const s = $('#revSum'); s.hidden = false; s.innerHTML = `<span class="rev-stars">★</span> <b>${Number(gs.rating).toFixed(1)}</b> · ${gs.count} review${gs.count === 1 ? '' : 's'} on <a href="${esc(gs.url || '#')}" target="_blank" rel="noopener">Google</a>`; }
   const link = own.googleReviewUrl || (g && g.url) || '';
@@ -396,4 +397,22 @@ function loadMedia(root = document) {
     ? `<a class="cta" href="${esc(link)}" target="_blank" rel="noopener">Review us on Google</a><a class="cta alt" href="mailto:${esc(CONTACT_EMAIL)}?subject=My%20VVM%20Details%20review">Email us your review</a>`
     : `<a class="cta" href="mailto:${esc(CONTACT_EMAIL)}?subject=My%20VVM%20Details%20review">Send us your review</a><a class="cta alt" href="sms:+12406019451">Text us</a>`;
   document.querySelectorAll('#reviews .reveal').forEach(el => io.observe(el));
+
+  // Carousel: arrows, swipe/scroll, and a gentle auto-advance that pauses on hover/touch and never runs for reduced motion
+  const vp = $('#revViewport'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const step = () => { const c = grid.querySelector('.rev'); return c ? c.getBoundingClientRect().width + (parseFloat(getComputedStyle(grid).columnGap) || 0) : vp.clientWidth; };
+  const go = dir => {
+    const max = vp.scrollWidth - vp.clientWidth - 4;
+    if (dir > 0 && vp.scrollLeft >= max) vp.scrollTo({ left: 0, behavior: reduce ? 'auto' : 'smooth' });
+    else if (dir < 0 && vp.scrollLeft <= 4) vp.scrollTo({ left: max + 4, behavior: reduce ? 'auto' : 'smooth' });
+    else vp.scrollBy({ left: dir * step(), behavior: reduce ? 'auto' : 'smooth' });
+  };
+  document.querySelectorAll('.rev-arrow').forEach(b => b.addEventListener('click', () => { go(+b.dataset.dir); paused = true; clearTimeout(resume); resume = setTimeout(() => paused = false, 12000); }));
+  vp.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { go(1); e.preventDefault(); } else if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); } });
+  let paused = false, visible = false, resume;
+  ['mouseenter', 'focusin', 'touchstart', 'pointerdown'].forEach(ev => vp.addEventListener(ev, () => { paused = true; clearTimeout(resume); }, { passive: true }));
+  ['mouseleave', 'focusout'].forEach(ev => vp.addEventListener(ev, () => { clearTimeout(resume); resume = setTimeout(() => paused = false, 4000); }));
+  vp.addEventListener('touchend', () => { clearTimeout(resume); resume = setTimeout(() => paused = false, 8000); }, { passive: true });
+  new IntersectionObserver(es => visible = es[0].isIntersecting, { threshold: .3 }).observe(vp);
+  if (!reduce && grid.children.length > 3) setInterval(() => { if (!paused && visible && !document.hidden) go(1); }, 6000);
 })();
