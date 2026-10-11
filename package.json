@@ -6,6 +6,6 @@
     "@netlify/blobs": "^8.1.0"
   },
   "scripts": {
-    "test": "node tests/rules.test.js && node tests/holds.test.js && node tests/book.test.js"
+    "test": "node tests/rules.test.js && node tests/holds.test.js && node tests/book.test.js && node tests/reviews.test.js"
   }
 }

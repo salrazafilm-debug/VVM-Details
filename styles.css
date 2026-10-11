@@ -1152,3 +1152,22 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 #book .vpick.open{max-height:140px;opacity:1;margin-top:14px}
 #book .vpick.off{max-height:140px;opacity:.5;filter:blur(3px);margin-top:14px;pointer-events:none;user-select:none}
 #book .vc-q.sm{font-size:.76rem;opacity:.8}
+
+/* "More than 1 vehicle?": on No the picker folds away completely */
+#book .vpick.off{max-height:0;opacity:0;filter:none;margin-top:0;pointer-events:none}
+
+/* ===== Reviews ===== */
+.rev-sum{margin-top:10px;font:700 1.05rem var(--body);color:var(--ink)}
+.rev-sum a{text-decoration:underline;text-underline-offset:3px}
+.rev-stars{color:#f0b429;font-size:1.25rem;letter-spacing:.12em;text-shadow:0 1px 0 rgba(0,0,0,.12)}
+.rev-grid{columns:3;column-gap:20px;max-width:1160px;margin:0 auto}
+.rev{break-inside:avoid;margin:0 0 20px;padding:24px 24px 20px;background:rgba(255,255,255,.82);border:3px solid var(--ink);border-radius:26px;box-shadow:0 14px 34px rgba(120,40,50,.18);text-align:left}
+.rev-text{margin:10px 0 14px;font:600 1.05rem/1.6 var(--body);color:var(--ink);text-wrap:pretty}
+.rev-by{font:600 .9rem/1.4 var(--body);color:#5a3a41}
+.rev-by b{font-weight:800;color:var(--ink)}
+.rev-src{display:inline-block;margin-left:8px;padding:3px 10px;border-radius:999px;background:var(--ink);color:#fff;font:800 .66rem var(--display);letter-spacing:.1em;text-transform:uppercase}
+.rev-empty{max-width:520px;margin-inline:auto;column-span:all;text-align:center}
+.rev-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:12px}
+.rev-cta .cta{background:var(--ink);color:#fff}
+.rev-cta .cta.alt{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+@media(max-width:900px){.rev-grid{columns:1}}

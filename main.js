@@ -1,6 +1,6 @@
 const CONTACT_EMAIL = "vvm.detailing@gmail.com";
 const $ = s => document.querySelector(s);
-const nav = $('#nav'), prog = $('#progress'), cta = $('.float-cta'), bg = $('.statement-bg');
+const nav = $('#nav'), prog = $('#progress'), cta = $('.float-cta');
 const burger = $('#burger'), links = $('#links');
 
 burger.addEventListener('click', () => {
@@ -26,8 +26,6 @@ function onScroll() {
     nav.classList.toggle('nav-hide', !keep && dy > 0);
     lastY = y;
   }
-  const r = bg.parentElement.getBoundingClientRect();
-  if (r.bottom > 0 && r.top < innerHeight) bg.style.transform = `translateY(${(r.top - innerHeight / 2) * -.15}px)`;
 }
 const requestTick = () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } };
 addEventListener('scroll', requestTick, { passive: true });
@@ -379,3 +377,22 @@ function loadMedia(root = document) {
     });
   });
 }
+
+
+/* ---------- Reviews: the owner's own (reviews.json) plus Google's (/api/reviews, once the owner connects it) ---------- */
+(async function reviews() {
+  const grid = $('#revGrid'); if (!grid) return;
+  let own = { reviews: [], googleReviewUrl: '' }, g = null;
+  try { own = await (await fetch('reviews.json', { cache: 'no-cache' })).json(); } catch {}
+  try { g = (await (await fetch('/api/reviews')).json()).google; } catch {}
+  const stars = n => '★'.repeat(Math.max(1, Math.min(5, Math.round(n)))) + '☆'.repeat(5 - Math.max(1, Math.min(5, Math.round(n))));
+  const card = (r, src) => `<article class="rev reveal"><p class="rev-stars" aria-label="${r.rating || 5} out of 5 stars">${stars(r.rating || 5)}</p><p class="rev-text">${esc(r.text)}</p><p class="rev-by"><b>${esc(r.name)}</b>${r.car ? ` · ${esc(r.car)}` : ''}${r.when ? ` · ${esc(r.when)}` : ''}<span class="rev-src">${src}</span></p></article>`;
+  const all = [...(g && g.reviews ? g.reviews.map(r => card(r, 'Google')) : []), ...(own.reviews || []).filter(r => r && r.text).map(r => card(r, 'VVM client'))];
+  grid.innerHTML = all.length ? all.join('') : `<article class="rev rev-empty reveal"><p class="rev-stars" aria-hidden="true">★★★★★</p><p class="rev-text">Finished your detail? We would love to hear how we did!</p></article>`;
+  if (g && g.rating) { const s = $('#revSum'); s.hidden = false; s.innerHTML = `<span class="rev-stars">★</span> <b>${Number(g.rating).toFixed(1)}</b> · ${g.count} review${g.count === 1 ? '' : 's'} on <a href="${esc(g.url || '#')}" target="_blank" rel="noopener">Google</a>`; }
+  const link = own.googleReviewUrl || (g && g.url) || '';
+  $('#revCta').innerHTML = link
+    ? `<a class="cta" href="${esc(link)}" target="_blank" rel="noopener">Review us on Google</a><a class="cta alt" href="mailto:${esc(CONTACT_EMAIL)}?subject=My%20VVM%20Details%20review">Email us your review</a>`
+    : `<a class="cta" href="mailto:${esc(CONTACT_EMAIL)}?subject=My%20VVM%20Details%20review">Send us your review</a><a class="cta alt" href="sms:+12406019451">Text us</a>`;
+  document.querySelectorAll('#reviews .reveal').forEach(el => io.observe(el));
+})();

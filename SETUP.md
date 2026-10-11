@@ -64,3 +64,6 @@ That needs Square Appointments Plus/Premium AND write permission on the token. S
 
 ## Working on it from your own computer
 Clone the repo (`git clone https://github.com/salrazafilm-debug/VVM-Details`), open the folder in the Claude Desktop app, or run `claude remote-control` in a terminal inside the folder. `CLAUDE.md` in the repo gives Claude everything it needs to continue.
+
+## Reviews (optional Google connection)
+The Reviews section always shows the reviews in `reviews.json` (name, text, stars, optional car and date) and a "Leave a review" button. To also show your Google reviews and rating automatically, add two Netlify environment variables: `GOOGLE_PLACES_API_KEY` (a Google Cloud key with **Places API (New)** turned on, restricted to that API) and `GOOGLE_PLACE_ID` (your Google Business Profile place id). Put your Google review link in `reviews.json` as `googleReviewUrl`. Google's answer is cached for 6 hours so it costs almost nothing. The site shows every review Google returns (up to 5), with the Google rating and link.
