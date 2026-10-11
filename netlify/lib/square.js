@@ -33,7 +33,7 @@ async function loadCatalog() {
   const variations = {};
   let cursor;
   do {
-    const res = await sq('/v2/catalog/search-items', { method: 'POST', body: { product_types: ['APPOINTMENTS_SERVICE'], limit: 100, cursor } });
+    const res = await sq('/v2/catalog/search-catalog-items', { method: 'POST', body: { product_types: ['APPOINTMENTS_SERVICE'], limit: 100, cursor } });
     for (const item of res.items || []) {
       const d = item.item_data || {};
       if (item.is_deleted || d.is_archived) continue;
