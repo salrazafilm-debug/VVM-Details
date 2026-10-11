@@ -429,3 +429,33 @@ function loadMedia(root = document) {
     requestAnimationFrame(tick);
   });
 })();
+
+// Our Work: balanced columns. Photos keep their own shapes; only the last photo in a taller column is trimmed so every column ends on the same line.
+(function () {
+  const g = document.querySelector('.gallery'); if (!g) return;
+  const figs = [...g.querySelectorAll('figure')]; let key = '';
+  function layout() {
+    const n = matchMedia('(max-width:900px)').matches ? 2 : 3, w = g.clientWidth, k = n + ':' + w;
+    if (!w || k === key) return; key = k;
+    const gap = n === 2 ? 10 : 14, cw = (w - gap * (n - 1)) / n;
+    const items = figs.map(f => { const im = f.querySelector('img'); f.style.height = ''; f.classList.remove('crop'); return [f, cw * im.getAttribute('height') / im.getAttribute('width')]; });
+    const place = order => { const cols = Array.from({ length: n }, () => ({ f: [], h: 0 })); order.forEach(it => { const c = cols.reduce((a, b) => (b.h < a.h ? b : a)); c.f.push(it); c.h += it[1] + (c.f.length > 1 ? gap : 0); }); return cols; };
+    const spread = cols => Math.max(...cols.map(c => c.h)) - Math.min(...cols.map(c => c.h));
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    let cols = place(items), best = spread(cols);
+    for (let i = 0; i < 3000 && best > 2; i++) {
+      const o = items.slice(); for (let k = o.length - 1; k > 0; k--) { const j = Math.floor(rnd() * (k + 1)); [o[k], o[j]] = [o[j], o[k]]; }
+      const c = place(o), sp = spread(c); if (sp < best) { best = sp; cols = c; }
+    }
+    const T = Math.min(...cols.map(c => c.h));
+    g.textContent = ''; g.classList.add('gal-js');
+    cols.forEach(c => {
+      const d = document.createElement('div'); d.className = 'gcol';
+      c.f.forEach(([f]) => d.appendChild(f));
+      const [lf, lh] = c.f[c.f.length - 1], cut = c.h - T;
+      if (cut > 1 && cut < lh * .6) { lf.style.height = (lh - cut) + 'px'; lf.classList.add('crop'); }
+      g.appendChild(d);
+    });
+  }
+  layout(); new ResizeObserver(() => { clearTimeout(layout.t); layout.t = setTimeout(layout, 60); }).observe(g); addEventListener('load', layout);
+})();
