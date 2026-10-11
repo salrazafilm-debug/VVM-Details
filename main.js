@@ -364,7 +364,3 @@ function loadMedia(root = document) {
     });
   });
 }
-
-/* ---------- Headlight Restoration before/after: look for the photos when the card is about to scroll into view ---------- */
-const hlCard = document.getElementById('headlight');
-if (hlCard) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { loadMedia(hlCard); o.disconnect(); } }, { rootMargin: '500px 0px' }).observe(hlCard);

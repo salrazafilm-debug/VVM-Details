@@ -15,12 +15,14 @@ Use the exact file names below. The extension can be `.jpg`, `.jpeg`, `.png` or 
 
 ## Headlight Restoration card (Before / After, shown on the card itself)
 
+These two photos are already in place. To change them, replace the files with new ones using the SAME names:
+
 | File name                | Where it shows                 |
 |--------------------------|--------------------------------|
 | `headlight-before.jpg`   | Left photo, labelled **Before** |
 | `headlight-after.jpg`    | Right photo, labelled **After** |
 
-Same rules as above (`.jpg`, `.jpeg`, `.png` or `.webp`). Use two photos with the same framing so they line up. If a file is missing, a "Photo coming soon" placeholder shows.
+Keep them `.jpg`, and use two photos with the same framing so they line up.
 
 If a file is missing, a branded "coming soon" placeholder shows in its place.
 
