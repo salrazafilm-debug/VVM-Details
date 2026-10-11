@@ -13,6 +13,15 @@ Use the exact file names below. The extension can be `.jpg`, `.jpeg`, `.png` or 
 | `ceramic-3.jpg`        | Photo labelled **Water beading** |
 | `ceramic-4.jpg`        | Photo labelled **Finished vehicle** |
 
+## Headlight Restoration card (Before / After, shown on the card itself)
+
+| File name                | Where it shows                 |
+|--------------------------|--------------------------------|
+| `headlight-before.jpg`   | Left photo, labelled **Before** |
+| `headlight-after.jpg`    | Right photo, labelled **After** |
+
+Same rules as above (`.jpg`, `.jpeg`, `.png` or `.webp`). Use two photos with the same framing so they line up. If a file is missing, a "Photo coming soon" placeholder shows.
+
 If a file is missing, a branded "coming soon" placeholder shows in its place.
 
 ## How to upload from your phone or computer

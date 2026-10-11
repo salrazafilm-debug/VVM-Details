@@ -1039,3 +1039,24 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 /* menu bar fades out while scrolling down (class set in main.js) and fades back in on scroll up */
 .nav{transition:background .4s var(--ease),box-shadow .4s var(--ease),opacity .35s ease,transform .4s var(--ease)}
 .nav.nav-hide{opacity:0;transform:translateY(-18px);pointer-events:none}
+
+/* ===== Headlight Restoration: wide standard card with Before / After photo slots ===== */
+.card.std.wide{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch}
+.card.std.wide .photo.ba{aspect-ratio:auto;min-height:340px;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;background:var(--pink-2)}
+.card.std.wide .info{display:flex;flex-direction:column;justify-content:center}
+.card.std.wide .cta{align-self:flex-start}
+.card.std .mslot{aspect-ratio:auto;border-radius:20px;background:linear-gradient(135deg,#fff,#ffe6e6 52%,#fff 60%,#ffdede);border:2px dashed #7a3b44;box-shadow:none}
+.card.std .mslot .ph{color:var(--ink)}
+.card.std .ph-ico{color:#7a3b44;filter:none}
+.card.std .mslot.filled{border:2px solid #fff;box-shadow:0 10px 26px rgba(26,18,20,.25);background:var(--ink)}
+.card.std .mslot .cap{background:rgba(26,18,20,.85)}
+@media(max-width:900px){
+  .card.std.wide{display:block}
+  .card.std.wide .photo.ba{min-height:0;aspect-ratio:4/3;padding:10px;gap:8px}
+  .card.std .mslot{border-radius:16px}
+  .card.std .mslot .ph{padding:8px}
+  .card.std .mslot .ph b{font-size:.85rem}
+  .card.std .mslot .ph span:last-child{font-size:.72rem}
+  .card.std .ph-ico{width:34px;height:34px}
+}
+@media(max-width:900px){.card.std.wide .cta{padding:16px 20px;letter-spacing:.07em;font-size:.88rem;white-space:nowrap}}

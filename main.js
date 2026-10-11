@@ -226,7 +226,7 @@ document.querySelectorAll('.flip').forEach(w => {
 document.querySelectorAll('.pe-tabs').forEach(tabs => {
   const btns = [...tabs.querySelectorAll('[role="tab"]')];
   const panels = btns.map(b => document.getElementById(b.getAttribute('aria-controls')));
-  const select = i => { btns.forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; panels[j].hidden = j !== i; }); if (panels[i].id === 'panel-media') loadMedia(); };
+  const select = i => { btns.forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; panels[j].hidden = j !== i; }); if (panels[i].id === 'panel-media') loadMedia(panels[i]); };
   btns.forEach((b, i) => b.addEventListener('click', () => select(i)));
   tabs.addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -237,20 +237,20 @@ document.querySelectorAll('.pe-tabs').forEach(tabs => {
 
 /* ---------- photo + video slots: drop files in assets/uploads/ and they appear (checked only when the Photos & Video tab is first opened) ---------- */
 const IMG_EXT = ['jpg', 'jpeg', 'png', 'webp'], VID_EXT = ['mp4', 'webm', 'mov'];
-let mediaLoaded = false;
-function loadMedia() {
-  if (mediaLoaded) return; mediaLoaded = true;
+function loadMedia(root = document) {
   function firstThatLoads(urls, test, done) { (function next(i) { if (i >= urls.length) return done(null); test(urls[i], ok => ok ? done(urls[i]) : next(i + 1)); })(0); }
   const caption = slot => { const c = document.createElement('span'); c.className = 'cap'; c.textContent = slot.dataset.label || ''; return c; };
-  document.querySelectorAll('.mslot[data-img]').forEach(slot => {
+  root.querySelectorAll('.mslot[data-img]').forEach(slot => {
+    if (slot.dataset.probed) return; slot.dataset.probed = '1';
     const base = 'assets/uploads/' + slot.dataset.img;
     firstThatLoads(IMG_EXT.map(x => `${base}.${x}`), (src, cb) => { const im = new Image(); im.onload = () => cb(true); im.onerror = () => cb(false); im.src = src; }, src => {
       if (!src) return;
-      const im = document.createElement('img'); im.src = src; im.alt = slot.dataset.label || ''; im.loading = 'lazy';
+      const im = document.createElement('img'); im.src = src; im.alt = slot.dataset.alt || slot.dataset.label || ''; im.loading = 'lazy';
       slot.replaceChildren(im, caption(slot)); slot.classList.add('filled');
     });
   });
-  document.querySelectorAll('.mslot[data-video]').forEach(slot => {
+  root.querySelectorAll('.mslot[data-video]').forEach(slot => {
+    if (slot.dataset.probed) return; slot.dataset.probed = '1';
     const base = 'assets/uploads/' + slot.dataset.video;
     firstThatLoads(VID_EXT.map(x => `${base}.${x}`), (src, cb) => { const v = document.createElement('video'); v.preload = 'metadata'; v.onloadedmetadata = () => cb(true); v.onerror = () => cb(false); v.src = src; }, src => {
       if (!src) return;
@@ -259,3 +259,7 @@ function loadMedia() {
     });
   });
 }
+
+/* ---------- Headlight Restoration before/after: look for the photos when the card is about to scroll into view ---------- */
+const hlCard = document.getElementById('headlight');
+if (hlCard) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { loadMedia(hlCard); o.disconnect(); } }, { rootMargin: '500px 0px' }).observe(hlCard);
