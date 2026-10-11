@@ -1343,3 +1343,10 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .card.gold .bl-2{font-family:var(--body);font-weight:700;font-size:1.02rem}
 .card.gold .bl-2 b{font-weight:800}
 .card.gold .bl-3 span{font-family:var(--body);font-weight:700}
+
+/* phones: hero paragraph smaller and tighter under DC, MD, VA */
+@media(max-width:600px){
+  .hero-inner{padding-inline:6px}
+  .eyebrow{font-size:.74rem;letter-spacing:.24em;margin-bottom:8px}
+  .lede{font-size:.98rem;line-height:1.5;font-weight:600;max-width:30ch;margin:0 auto 18px;text-wrap:balance}
+}
