@@ -11,7 +11,7 @@ links.addEventListener('click', e => { if (e.target.tagName === 'A') { links.cla
 
 // Scroll work runs once per frame (not on every scroll event) and reads page height only when it changes,
 // so scrolling never forces the browser to recalculate layout.
-let docMax = 1, ticking = false;
+let docMax = 1, ticking = false, lastY = 0;
 const measure = () => { docMax = Math.max(1, document.documentElement.scrollHeight - innerHeight); };
 function onScroll() {
   ticking = false;
@@ -19,6 +19,13 @@ function onScroll() {
   prog.style.transform = `scaleX(${Math.min(1, y / docMax)})`;
   nav.classList.toggle('scrolled', y > 40);
   cta.classList.toggle('show', y > innerHeight * .7);
+  // Menu bar fades away while scrolling down and returns on any scroll up, at the top, or while the phone menu is open
+  const dy = y - lastY;
+  if (Math.abs(dy) > 6) {
+    const keep = y < 80 || links.classList.contains('open') || nav.contains(document.activeElement);
+    nav.classList.toggle('nav-hide', !keep && dy > 0);
+    lastY = y;
+  }
   const r = bg.parentElement.getBoundingClientRect();
   if (r.bottom > 0 && r.top < innerHeight) bg.style.transform = `translateY(${(r.top - innerHeight / 2) * -.15}px)`;
 }

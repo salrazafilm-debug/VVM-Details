@@ -1036,3 +1036,6 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 }
 /* hero collage: dark behind the photos so the gaps between them look clean instead of showing pink */
 .collage{background:#1a1214;gap:6px}
+/* menu bar fades out while scrolling down (class set in main.js) and fades back in on scroll up */
+.nav{transition:background .4s var(--ease),box-shadow .4s var(--ease),opacity .35s ease,transform .4s var(--ease)}
+.nav.nav-hide{opacity:0;transform:translateY(-18px);pointer-events:none}
