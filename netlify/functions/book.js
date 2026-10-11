@@ -1,4 +1,4 @@
-const { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, BOOKABLE } = require('../lib/square');
+const { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, isPublic } = require('../lib/square');
 const { slotsForDay, localToUtc, fromHHMM } = require('../lib/rules');
 const { blocksWithHolds, addHold } = require('../lib/holds');
 const crypto = require('crypto');
@@ -21,7 +21,7 @@ exports.handler = async (event) => {
 
     const catalog = await loadCatalog();
     const v = catalog[b.variationId];
-    if (!v || !BOOKABLE.has(v.kind) || !v.bookable) throw httpError(400, 'Unknown service.');
+    if (!v || !isPublic(v) || !v.bookable) throw httpError(400, 'Unknown service.');
 
     // Re-check availability on the server so a stale page can never double-book.
     const nextDay = new Date(localToUtc(b.date, 24 * 60 + 60)); // safely into the next local day

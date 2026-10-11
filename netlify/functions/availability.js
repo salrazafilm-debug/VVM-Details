@@ -1,4 +1,4 @@
-const { loadCatalog, blocksByDay, json, fail, httpError, BOOKABLE } = require('../lib/square');
+const { loadCatalog, blocksByDay, json, fail, httpError, isPublic } = require('../lib/square');
 const { slotsForDay } = require('../lib/rules');
 const { blocksWithHolds } = require('../lib/holds');
 
@@ -8,7 +8,7 @@ exports.handler = async (event) => {
     if (!/^\d{4}-\d{2}$/.test(month || '')) throw httpError(400, 'Invalid month.');
     const catalog = await loadCatalog();
     const v = catalog[variation];
-    if (!v || !BOOKABLE.has(v.kind)) throw httpError(400, 'Unknown service.');
+    if (!v || !isPublic(v)) throw httpError(400, 'Unknown service.');
 
     const [y, m] = month.split('-').map(Number);
     const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, '0')}`;

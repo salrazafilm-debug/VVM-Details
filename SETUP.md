@@ -32,7 +32,25 @@ In the Square Dashboard > Items & services > Service library:
 Make one booking from your phone. Check: the email arrives, the time disappears for the next visitor, and the confirmation says "Your booking is now reserved!". Add it to Square yourself (Square sends its normal notifications).
 
 ## 6. Move your domain LAST
-Netlify > **Domain management > Add a domain** > `vvmdetails.com` and follow the DNS steps at your registrar. Do this only after step 5 passes. Square Online keeps working until you switch DNS.
+Do this only after step 5 passes. Right now vvmdetails.com and www.vvmdetails.com show your **old Squarespace site**, and they keep doing so until you switch.
+1. Netlify > **Domain management > Add a domain** > `vvmdetails.com`. Make **vvmdetails.com** (no www) the primary, so www forwards to it.
+2. Where the domain's DNS is managed (the domain looks registered at Squarespace Domains), change only two records, using the exact values Netlify shows you:
+   - the main address (**A record**, host `@`): replace the Squarespace addresses with Netlify's
+   - **www** (CNAME): point it at your `something.netlify.app` address
+3. Leave every other record alone (especially any mail records). Do NOT transfer the domain and do NOT cancel the domain registration.
+4. In Netlify, wait for the free HTTPS certificate (a few minutes), then open https://vvmdetails.com on your phone.
+5. Only after the new site works, cancel the old Squarespace **website** plan (not the domain).
+Old addresses like `/appointments` and `/services-store/...` already forward to the right spot on the new site (see `netlify.toml`).
+
+## Email
+- Booking requests arrive at **vvm.detailing@gmail.com** from Netlify. After your first test booking, if it is in Spam, open it and tap **Not spam**, then make a filter so mail from `formresponses@netlify.com` never goes to spam.
+- vvmdetails.com has no email set up (no mail records, and the domain currently says it sends no mail). That is fine while you use the Gmail address.
+- If you want an address like `hello@vvmdetails.com`: free forwarding into your Gmail, or Google Workspace (about $7 a month). If you will SEND from it, the domain's mail records (SPF/DKIM) must be updated first or messages get rejected. Ask Claude to walk you through it.
+- The free Netlify plan allows about 100 booking requests a month.
+- Customers see "Your booking is now reserved!" on screen. They do not get a confirmation email, so you reach out to confirm.
+
+## Maintenance Plan
+It is for returning clients only, so the website never offers it, even though it is bookable in Square. You book it by hand.
 
 ## Day to day
 - A customer books > you get an email > add it in Square. Once it is in Square at the same start time the website's hold clears automatically. Unconfirmed holds clear after 3 days.

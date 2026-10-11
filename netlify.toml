@@ -10,6 +10,37 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+# Old Squarespace pages: send visitors (and Google) to the matching spot on the new site
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/contact"
+  to = "/#book"
+  status = 301
+
+[[redirects]]
+  from = "/appointments"
+  to = "/#book"
+  status = 301
+
+[[redirects]]
+  from = "/services-store"
+  to = "/#services"
+  status = 301
+
+[[redirects]]
+  from = "/services-store/*"
+  to = "/#services"
+  status = 301
+
 # Keep repo files that are not part of the website from being served (the whole repo folder is published)
 [[redirects]]
   from = "/SETUP.md"

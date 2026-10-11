@@ -38,10 +38,18 @@ Never put tokens or secrets in the repo or in chat. Never write to the owner's S
 ## Square facts
 - Location ID `L6GQ2NMD5YF1H`, timezone America/New_York, one team member (the owner). Prices and durations come from Square's service library, which is the source of truth.
 - The Square connector available to Claude is read-only for the catalog (`ITEMS_WRITE` was refused). Reconnecting it with write access is the owner's step.
+- **Maintenance Plan** (clients only) is hidden from the website on purpose: `isPublic()` in `netlify/lib/square.js` filters it out of `services`, `availability` and `book`. It still blocks time as a 'full' job. Headlight Restoration and Engine Bay are 'other' and never shown.
+- Square `price_description` text on some variations is stale (for example Paint Enhancement says $725/$1050); the real `price_money` is what the site uses and it matches.
 
-## Open items (as of the last session)
-1. Square catalog: Full Factory Reset **Mini-Van to $410** (site already says $410); Interior Reset **add Truck** $255, 4 hrs, online-bookable (site already shows it). Calendar shows Square's data until fixed.
-2. Netlify: repo is imported. Still needed: confirm deploy published, Forms email notification to vvm.detailing@gmail.com, add the three env vars, test booking, then point vvmdetails.com (last).
+## Domain and email facts (checked 2026-10-11)
+- vvmdetails.com and www still point at the old **Squarespace** site (A records 198.49.23.x / 198.185.159.x, www CNAME ext-sq.squarespace.com). Name servers are ns-cloud-c*.googledomains.com, so the domain is registered at Squarespace Domains (ex Google Domains). Switch only the apex A record and the www CNAME to Netlify, keep the name servers, and never touch the registration.
+- No MX records. SPF is `v=spf1 -all` and DMARC is `p=reject`, so the domain sends and receives no mail. Any `@vvmdetails.com` mailbox or sending needs MX plus an SPF/DKIM update first.
+- Old Squarespace URLs (`/home /about /contact /appointments /services-store...`) are 301-redirected in `netlify.toml`.
+- The 404 page uses root-relative links because Netlify serves it at any depth. Keep it that way.
+
+## Open items (as of 2026-10-11)
+1. Square catalog (owner does it; connector is read-only): Full Factory Reset **Mini-Van is $360 in Square, must be $410** (site says $410); Interior Reset **has no Truck variation**, add Truck $255, 4 hrs, online-bookable (site already shows it). Until fixed the calendar shows Square's data and does not match the cards.
+2. Netlify: repo is imported but a deploy could not be confirmed (no status on the GitHub commit). Still needed: confirm deploy published, Forms email notification to vvm.detailing@gmail.com, add the three env vars (the owner pastes the Square token, never Claude), test booking, then point vvmdetails.com (last).
 3. Terms page: waiting on the owner's answers to the `[YOUR CALL]` items in `drafts/terms-draft.md`, then build `terms.html` and link it beside Privacy (footer and booking consent line).
 4. Replace screenshot-crop photos with the owner's originals; fill `ceramic-1..4` and `ceramic-video` slots.
 5. Ideas not done: customer reviews section, Google Business link, analytics (would require updating privacy.html).

@@ -4,6 +4,9 @@ const { kindOf, localToUtc, utcToLocal, CFG } = require('./rules');
 const BASE = process.env.SQUARE_ENV === 'sandbox' ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com';
 const VERSION = '2025-10-16';
 const BOOKABLE = new Set(['full', 'interior', 'exterior', 'ceramic']);
+// What customers may pick online. The Maintenance Plan is for returning clients only, so the owner books it
+// by hand in Square. It still blocks time as a 'full' job (see kindOf) but is never offered or accepted here.
+const isPublic = v => BOOKABLE.has(v.kind) && !/maintenance/i.test(v.item);
 
 function httpError(status, message) { const e = new Error(message); e.status = status; return e; }
 
@@ -98,4 +101,4 @@ const json = (status, body) => ({
 });
 const fail = e => json(e.status && e.status < 600 ? e.status : 500, { error: e.status && e.status < 500 ? e.message : 'Something went wrong. Please call or text us to book.' });
 
-module.exports = { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, BOOKABLE, CFG };
+module.exports = { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, BOOKABLE, isPublic, CFG };
