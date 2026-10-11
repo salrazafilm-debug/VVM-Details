@@ -1202,3 +1202,15 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .rev-src{margin-left:0}
 .rev-src.ver{display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 5px;background:#e8f3ea;color:#14602b;border:1.5px solid #14602b;font-size:.64rem}
 .rev-src.ver svg{width:16px;height:16px;flex:none;fill:#1e8e3e}
+
+/* No fade-in: everything is simply there */
+.reveal,.reveal.in{opacity:1;transform:none;transition:none}
+/* Reviews header: big title, five shiny holographic gold stars */
+.rev-title{font-size:clamp(3rem,8vw,5.6rem);line-height:.95;font-weight:900}
+.rev-stars5{display:flex;justify-content:center;gap:8px;margin:14px 0 0;font-size:clamp(2rem,5vw,3.2rem);line-height:1}
+.rev-stars5 i{font-style:normal;background-image:linear-gradient(90deg,#fff6c4 0%,#f7c948 10%,#d9960f 20%,#fff 27%,#f7c948 36%,#b8d4ff 42%,#fff6c4 50%,#f7c948 60%,#d9960f 70%,#fff 77%,#f7c948 86%,#b8d4ff 92%,#fff6c4 100%);background-size:200% 100%;background-repeat:repeat;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:holoFlow 4s linear infinite;filter:drop-shadow(0 2px 3px rgba(120,70,0,.45))}
+/* Our Work: every photo cropped to the same shape */
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:auto;gap:14px;column-count:auto}
+.gallery figure{margin:0;aspect-ratio:1/1;break-inside:auto;height:auto}
+.gallery img{height:100%;object-fit:cover}
+@media(max-width:900px){.gallery{grid-template-columns:1fr 1fr;grid-auto-rows:auto;gap:10px}.gallery figure:last-child{grid-column:1/-1;aspect-ratio:16/9}}

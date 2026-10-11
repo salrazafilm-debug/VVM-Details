@@ -391,7 +391,6 @@ function loadMedia(root = document) {
   const all = [...(g && g.reviews ? g.reviews.map(r => card(r, 'Google')) : []), ...(own.reviews || []).filter(r => r && r.text).map(r => card(r, r.source || 'VVM client'))];
   grid.innerHTML = all.length ? all.join('') : `<article class="rev rev-empty"><div class="rev-body"><p class="rev-stars" aria-hidden="true">★★★★★</p><p class="rev-text">Finished your detail? We would love to hear how we did!</p></div></article>`;
   const gs = (g && g.rating) ? g : own.googleSummary;   // live Google numbers when connected, otherwise the saved snapshot in reviews.json
-  if (gs && gs.rating) { const s = $('#revSum'); s.hidden = false; s.innerHTML = `<span class="rev-stars">★</span> <b>${Number(gs.rating).toFixed(1)}</b> · ${gs.count} review${gs.count === 1 ? '' : 's'} on <a href="${esc(gs.url || '#')}" target="_blank" rel="noopener">Google</a>`; }
   const link = own.googleReviewUrl || (g && g.url) || '';
   $('#revCta').innerHTML = link
     ? `<a class="cta" href="${esc(link)}" target="_blank" rel="noopener">Review us on Google</a><a class="cta alt" href="mailto:${esc(CONTACT_EMAIL)}?subject=My%20VVM%20Details%20review">Email us your review</a>`
