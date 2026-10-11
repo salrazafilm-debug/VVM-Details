@@ -1250,3 +1250,69 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
   .card.std.wide .photo{aspect-ratio:16/10}
   .cards{gap:26px}
 }
+
+
+/* =====================================================================
+   PHONES: compact service cards (Full Factory Reset was 1200px tall)
+   ===================================================================== */
+.d-short{display:none}.d-full{display:inline}
+@media(max-width:600px){
+  #services.section{padding-block:56px}
+  .d-full{display:none}.d-short{display:inline}
+  .xs-hide{display:none}
+
+  /* Full Factory Reset: photos become a short strip that shows the whole car; badge gets its own row */
+  .card.feature.gold .ribbon{position:static;justify-self:center;margin:12px 0 10px;padding:7px 16px 7px 10px;font-size:.78rem;gap:8px;animation:none}
+  .card.feature.gold .ribbon .crown{width:38px;height:29px}
+  .card.feature.gold .ribbon b{font-size:1.1rem}
+  .card.feature.gold .photo.grid4{aspect-ratio:auto;height:150px;min-height:0;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr}
+  .card.feature.gold .info{padding:14px 14px 18px}
+  .gold .kicker{display:none}
+  .card.feature.gold h3{font-size:2.15rem;line-height:1.02;margin-bottom:12px}
+  .gold .sizes{max-width:312px;margin:0 auto 4px;gap:6px}
+  .gold .size{width:96px;height:38px}
+  .gold .size-hint{font-size:.72rem;margin:0 0 8px}
+  .gold .hook{font-size:.86rem;margin:0 0 8px;white-space:nowrap}
+  .checks{padding:2px 14px;margin:0 auto 12px}
+  .checks li{min-height:42px;padding:5px 0;font-size:.9rem;gap:10px}
+  .checks .ck{width:24px;height:24px}
+  .checks .ck svg{width:14px;height:14px}
+  .checks li:first-child > span:not(.ck){flex-wrap:nowrap;font-size:.9rem}
+  .checks .ie{gap:4px;margin-right:3px}
+  .checks .ie-p{font-size:.6rem;padding:3px 8px;letter-spacing:.06em}
+  .checks .ie-plus{font-size:.8rem}
+  .checks .save-li{min-height:54px}
+  .checks .save-b{font-size:1.1rem}
+  .checks .save-s{font-size:.8rem}
+
+  /* Paint Enhancement + Ceramic (diamond): shorter photo, 4 sizes in one row, shorter text, buttons side by side */
+  .card.diamond.front .photo{aspect-ratio:16/9}
+  .card.diamond .info{padding:14px 14px 18px}
+  .card.diamond .sizes{flex-wrap:nowrap;width:100%;max-width:330px;margin-inline:auto;gap:6px}
+  .card.diamond .sizes li{flex:1 1 0;min-width:0}
+  .card.diamond .size{width:100%;height:38px}
+  .card.diamond .size .face{font-size:.8rem}
+  .card.diamond .size-hint{font-size:.72rem;margin:0 0 8px}
+  .card.diamond .cta-row{flex-wrap:nowrap;gap:8px}
+  .card.diamond .cta-row .cta{padding:12px 14px;font-size:.74rem;letter-spacing:.08em;white-space:nowrap}
+  .card-foot{padding:14px 32px}
+  .foot-sub{margin-top:4px}
+  .foot-mail-wrap{margin-top:8px}
+}
+
+
+/* phones: the checklist is replaced by a 3-line summary (the Interior and Exterior cards list what is included) */
+.bundle-line{display:none}
+@media(max-width:600px){
+  .gold .checks{display:none}
+  .bundle-line{display:grid;justify-items:center;gap:6px;margin:6px 0 16px;text-align:center}
+  .bundle-line p{margin:0;text-wrap:balance}
+  .bl-1{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+  .bl-1 .ie{margin:0;gap:5px}
+  .bl-1 .ie-p{font-size:.66rem;padding:4px 10px;letter-spacing:.08em}
+  .bl-w{font:800 .95rem var(--body);color:#fff}
+  .bl-2{font:600 .92rem/1.35 var(--body);color:rgba(255,255,255,.92)}
+  .bl-2 b{font-weight:800;color:#fff}
+  .bl-3{font:600 .85rem/1.3 var(--body);color:rgba(255,255,255,.9)}
+  .bl-3 b{font:900 1.2rem var(--display);letter-spacing:.04em;color:#ffd45a;text-shadow:0 0 16px rgba(247,200,60,.65);white-space:nowrap}
+}
