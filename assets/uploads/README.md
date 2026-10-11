@@ -7,11 +7,9 @@ Use the exact file names below. The extension can be `.jpg`, `.jpeg`, `.png` or 
 
 | File name              | Where it shows                 |
 |------------------------|--------------------------------|
-| `ceramic-video.mp4`    | Big video at the top of "Photos & Video" |
-| `ceramic-1.jpg`        | Photo labelled **Before**      |
-| `ceramic-2.jpg`        | Photo labelled **After**       |
-| `ceramic-3.jpg`        | Photo labelled **Water beading** |
-| `ceramic-4.jpg`        | Photo labelled **Finished vehicle** |
+| `ceramic-video.mp4`    | Video in "Photos & Video" (muted, loops). Phone clips: convert to H.264 MP4 and strip location first. |
+
+The one photo there (paint correction test spot) is `assets/ceramic-correction.jpg`.
 
 ## Headlight Restoration card (Before / After, shown on the card itself)
 
