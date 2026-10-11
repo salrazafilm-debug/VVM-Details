@@ -1181,3 +1181,16 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 @media(max-width:1000px){.rev{flex-basis:calc((100% - 20px) / 2)}}
 @media(max-width:640px){.rev-wrap{padding:0 8px}.rev{flex-basis:88%}.rev-arrow{top:auto;bottom:-4px;width:42px;height:42px}.rev-arrow[data-dir="-1"]{left:calc(50% - 52px)}.rev-arrow[data-dir="1"]{right:calc(50% - 52px)}.rev-viewport{padding-bottom:58px}}
 @media(prefers-reduced-motion:reduce){.rev-viewport{scroll-behavior:auto}}
+
+/* Reviews: bigger cards, a wider stage, and no snapping so the endless drift is smooth */
+#reviews.section{max-width:1600px}
+.rev-wrap{max-width:1560px;padding:0 70px}
+.rev-viewport{scroll-snap-type:none;padding:8px 3px 30px}
+.rev-track{gap:28px}
+.rev{flex:0 0 calc((100% - 56px) / 3);scroll-snap-align:none}
+.rev-body{padding:24px 28px 26px}
+.rev-text{font-size:1.14rem;line-height:1.6;margin:10px 0 18px}
+.rev-stars{font-size:1.45rem}
+.rev-by{font-size:.98rem}
+@media(max-width:1000px){.rev{flex-basis:calc((100% - 28px) / 2)}}
+@media(max-width:640px){.rev-wrap{padding:0 6px}.rev{flex-basis:90%}.rev-track{gap:18px}}

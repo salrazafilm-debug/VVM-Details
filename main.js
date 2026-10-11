@@ -398,21 +398,35 @@ function loadMedia(root = document) {
     : `<a class="cta" href="mailto:${esc(CONTACT_EMAIL)}?subject=My%20VVM%20Details%20review">Send us your review</a><a class="cta alt" href="sms:+12406019451">Text us</a>`;
   document.querySelectorAll('#reviews .reveal').forEach(el => io.observe(el));
 
-  // Carousel: arrows, swipe/scroll, and a gentle auto-advance that pauses on hover/touch and never runs for reduced motion
+  // Carousel: an endless loop that keeps drifting on its own and never stops. Arrows and swipe still work.
+  // Three identical sets sit side by side; when the drift reaches the end of the middle set it jumps back by one set (invisible).
   const vp = $('#revViewport'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const step = () => { const c = grid.querySelector('.rev'); return c ? c.getBoundingClientRect().width + (parseFloat(getComputedStyle(grid).columnGap) || 0) : vp.clientWidth; };
-  const go = dir => {
-    const max = vp.scrollWidth - vp.clientWidth - 4;
-    if (dir > 0 && vp.scrollLeft >= max) vp.scrollTo({ left: 0, behavior: reduce ? 'auto' : 'smooth' });
-    else if (dir < 0 && vp.scrollLeft <= 4) vp.scrollTo({ left: max + 4, behavior: reduce ? 'auto' : 'smooth' });
-    else vp.scrollBy({ left: dir * step(), behavior: reduce ? 'auto' : 'smooth' });
-  };
-  document.querySelectorAll('.rev-arrow').forEach(b => b.addEventListener('click', () => { go(+b.dataset.dir); paused = true; clearTimeout(resume); resume = setTimeout(() => paused = false, 12000); }));
-  vp.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { go(1); e.preventDefault(); } else if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); } });
-  let paused = false, visible = false, resume;
-  ['mouseenter', 'focusin', 'touchstart', 'pointerdown'].forEach(ev => vp.addEventListener(ev, () => { paused = true; clearTimeout(resume); }, { passive: true }));
-  ['mouseleave', 'focusout'].forEach(ev => vp.addEventListener(ev, () => { clearTimeout(resume); resume = setTimeout(() => paused = false, 4000); }));
-  vp.addEventListener('touchend', () => { clearTimeout(resume); resume = setTimeout(() => paused = false, 8000); }, { passive: true });
-  new IntersectionObserver(es => visible = es[0].isIntersecting, { threshold: .3 }).observe(vp);
-  if (!reduce && grid.children.length > 3) setInterval(() => { if (!paused && visible && !document.hidden) go(1); }, 6000);
+  const n = grid.children.length, loop = n > 3;
+  if (loop) {
+    const set = [...grid.children];
+    for (let k = 0; k < 2; k++) set.forEach(c => { const x = c.cloneNode(true); x.setAttribute('aria-hidden', 'true'); grid.appendChild(x); });
+  }
+  const gap = () => parseFloat(getComputedStyle(grid).columnGap) || 0;
+  const setW = () => loop ? grid.children[n].offsetLeft - grid.children[0].offsetLeft : 0;
+  const step = () => { const c = grid.querySelector('.rev'); return c ? c.getBoundingClientRect().width + gap() : vp.clientWidth; };
+  let S = setW(), pos = 0, lastSet = 0, hold = 0, touching = false, visible = false, last = performance.now();
+  if (loop) { vp.scrollLeft = S; pos = lastSet = vp.scrollLeft; addEventListener('resize', () => { const r = vp.scrollLeft / (S || 1); S = setW(); vp.scrollLeft = r * S; pos = lastSet = vp.scrollLeft; }); }
+  const arrow = dir => { hold = performance.now() + 1100; vp.scrollBy({ left: dir * step(), behavior: reduce ? 'auto' : 'smooth' }); };
+  document.querySelectorAll('.rev-arrow').forEach(b => b.addEventListener('click', () => arrow(+b.dataset.dir)));
+  vp.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { arrow(1); e.preventDefault(); } else if (e.key === 'ArrowLeft') { arrow(-1); e.preventDefault(); } });
+  const touchOn = () => { touching = true; }, touchOff = () => { touching = false; hold = performance.now() + 1500; };
+  vp.addEventListener('touchstart', touchOn, { passive: true }); vp.addEventListener('touchend', touchOff, { passive: true }); vp.addEventListener('touchcancel', touchOff, { passive: true });
+  vp.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') hold = performance.now() + 1500; });
+  vp.addEventListener('wheel', () => { hold = performance.now() + 1500; }, { passive: true });
+  new IntersectionObserver(es => visible = es[0].isIntersecting, { threshold: .15 }).observe(vp);
+  if (loop) requestAnimationFrame(function tick(t) {
+    const dt = Math.min(250, t - last); last = t;
+    let moved = false;
+    if (Math.abs(vp.scrollLeft - lastSet) > 1.5) pos = vp.scrollLeft;                    // someone moved it (arrow, swipe): follow, never fight it
+    else if (visible && !document.hidden && !touching && t > hold && !reduce) { pos += 42 * dt / 1000; moved = true; }   // ~42 px a second, always
+    if (pos >= 2 * S) { pos -= S; moved = true; } else if (pos < S * .5) { pos += S; moved = true; }               // endless
+    if (moved) vp.scrollLeft = pos;
+    lastSet = vp.scrollLeft;
+    requestAnimationFrame(tick);
+  });
 })();
