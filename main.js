@@ -9,23 +9,38 @@ burger.addEventListener('click', () => {
 });
 links.addEventListener('click', e => { if (e.target.tagName === 'A') { links.classList.remove('open'); burger.setAttribute('aria-expanded', false); } });
 
+// Scroll work runs once per frame (not on every scroll event) and reads page height only when it changes,
+// so scrolling never forces the browser to recalculate layout.
+let docMax = 1, ticking = false;
+const measure = () => { docMax = Math.max(1, document.documentElement.scrollHeight - innerHeight); };
 function onScroll() {
-  const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
-  prog.style.width = (y / h * 100) + '%';
+  ticking = false;
+  const y = scrollY;
+  prog.style.transform = `scaleX(${Math.min(1, y / docMax)})`;
   nav.classList.toggle('scrolled', y > 40);
   cta.classList.toggle('show', y > innerHeight * .7);
   const r = bg.parentElement.getBoundingClientRect();
   if (r.bottom > 0 && r.top < innerHeight) bg.style.transform = `translateY(${(r.top - innerHeight / 2) * -.15}px)`;
 }
-addEventListener('scroll', onScroll, { passive: true }); onScroll();
+const requestTick = () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } };
+addEventListener('scroll', requestTick, { passive: true });
+addEventListener('resize', () => { measure(); requestTick(); });
+new ResizeObserver(() => { measure(); requestTick(); }).observe(document.body);
+measure(); onScroll();
 
+// Reveal as soon as an element's top edge enters the screen (tall cards used to wait until 15% was visible, which
+// showed blank pink space). Short stagger, capped, so nothing feels slow.
 const io = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-}), { threshold: .15 });
-document.querySelectorAll('.reveal').forEach((el, i) => {
-  el.style.transitionDelay = el.closest('.cards,.pillars,.gallery,.how-grid') ? [...el.parentElement.children].indexOf(el) * 110 + 'ms' : '';
+}), { threshold: 0, rootMargin: '0px 0px -6% 0px' });
+document.querySelectorAll('.reveal').forEach(el => {
+  el.style.transitionDelay = el.closest('.cards,.pillars,.gallery,.how-grid') ? Math.min([...el.parentElement.children].indexOf(el), 3) * 55 + 'ms' : '';
   io.observe(el);
 });
+
+// Pause the endless shine/glow animations on anything that is off screen, so only what you can see is animating.
+const pauser = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-off', !e.isIntersecting)), { rootMargin: '120px 0px' });
+document.querySelectorAll('.hero,.marquee,#services .card,#services .flip,.statement,.how,#work,.book,.footer').forEach(el => pauser.observe(el));
 
 
 $('#yr').textContent = new Date().getFullYear();
