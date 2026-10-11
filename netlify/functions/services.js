@@ -1,6 +1,6 @@
 const { loadCatalog, json, fail, isPublic } = require('../lib/square');
 
-const ORDER = { full: 0, interior: 1, exterior: 2, ceramic: 3 };
+const ORDER = { full: 0, interior: 1, exterior: 2, headlight: 3, ceramic: 4 };
 
 exports.handler = async () => {
   try {

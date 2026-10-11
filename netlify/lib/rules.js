@@ -49,9 +49,64 @@ function kindOf(itemName) {
   if (n.startsWith('interior')) return 'interior';
   if (n.startsWith('exterior')) return 'exterior';
   if (n.includes('maintenance')) return 'full';
+  if (n.includes('headlight')) return 'headlight';
   return 'other';
 }
-const isShort = k => k === 'interior' || k === 'exterior';
+// Short jobs may stack three to a day (see maxShortPerDay). A headlight restoration is about an hour.
+const isShort = k => k === 'interior' || k === 'exterior' || k === 'headlight';
+
+// ---- carts: one or two vehicles, each with one or more services ----
+const MAX_CARS = 2;       // 3 or more vehicles: the customer is sent to text/email us
+const MAX_PER_CAR = 4;    // services per vehicle
+
+// "A.B,C" -> [['A','B'],['C']]  (comma between vehicles, dot between services on one vehicle)
+function parsePlan(s) {
+  return String(s || '').split(',').map(c => c.split('.').map(x => x.trim()).filter(Boolean)).filter(c => c.length);
+}
+
+// One vehicle's services become a single job. Full/ceramic dominate; interior + exterior together act like a full detail.
+function combineKind(kinds) {
+  if (kinds.includes('ceramic')) return 'ceramic';
+  const core = kinds.filter(k => k !== 'headlight');
+  if (core.includes('full') || (core.includes('interior') && core.includes('exterior'))) return 'full';
+  return core.length ? core[0] : 'headlight';
+}
+function combineJob(services) {
+  return {
+    kind: combineKind(services.map(s => s.kind)),
+    durationMin: services.reduce((n, s) => n + s.durationMin, 0),
+    transitionMin: Math.max(0, ...services.map(s => s.transitionMin || 0)),
+    priceCents: services.reduce((n, s) => n + (s.priceCents || 0), 0),
+  };
+}
+
+// plan: [[variationId, ...], ...]; catalog: id -> variation; isPublic: variation -> boolean.
+// Throws an Error with status 400 and a customer-friendly message when the cart is not allowed.
+function resolvePlan(plan, catalog, isPublic) {
+  const fail = m => { const e = new Error(m); e.status = 400; throw e; };
+  if (!Array.isArray(plan) || !plan.length) fail('Please pick a service.');
+  if (plan.length > MAX_CARS) fail('For 3 or more vehicles, please text or email us.');
+  const cars = plan.map(ids => {
+    if (!Array.isArray(ids) || !ids.length || ids.length > MAX_PER_CAR) fail('Please pick a service for each vehicle.');
+    const services = ids.map(id => {
+      const v = catalog[id];
+      if (!v || !isPublic(v) || !v.bookable || !v.durationMin) fail('Unknown service.');
+      return v;
+    });
+    if (new Set(services.map(v => v.item)).size !== services.length) fail('Pick each service once per vehicle.');
+    const kinds = services.map(v => v.kind);
+    if (kinds.includes('ceramic') && (services.length > 1 || plan.length > 1)) fail('Ceramic coating takes the whole day, so it is booked on its own. Please text or email us to combine it.');
+    if (kinds.includes('full') && (kinds.includes('interior') || kinds.includes('exterior'))) fail('The Full Factory Reset already includes the Interior and Exterior Reset.');
+    return { services, job: combineJob(services) };
+  });
+  return { cars, jobs: cars.map(c => c.job) };
+}
+
+// Where each vehicle's job sits when they are done back to back starting at `start` (minutes after midnight).
+function partyBlocks(start, jobs) {
+  let s = start;
+  return jobs.map(j => { const b = { start: s, end: s + j.durationMin + (j.transitionMin || 0), kind: j.kind }; s = b.end; return b; });
+}
 
 function daysFromToday(dateStr, now) {
   const today = utcToLocal(now).date;
@@ -61,17 +116,18 @@ function daysFromToday(dateStr, now) {
 }
 
 // dayBlocks: [{ start, end, kind }] in minutes after local midnight (end includes transition time)
-// service: { kind, durationMin, transitionMin }
-function slotsForDay(dateStr, dayBlocks, service, now, cfg = CFG) {
+// jobs: [{ kind, durationMin, transitionMin }], one per vehicle, done back to back from the chosen start.
+// Each vehicle counts as one booking toward the daily limit.
+function slotsForJobs(dateStr, dayBlocks, jobs, now, cfg = CFG) {
   const ahead = daysFromToday(dateStr, now);
   if (ahead < 0 || ahead > cfg.maxDaysAhead) return [];
   if (dayBlocks.some(b => b.kind === 'ceramic')) return [];
-  if (service.kind === 'ceramic' && dayBlocks.length > 0) return [];
-  const kinds = [...dayBlocks.map(b => b.kind), service.kind];
+  if (jobs.some(j => j.kind === 'ceramic') && (dayBlocks.length > 0 || jobs.length > 1)) return [];
+  const kinds = [...dayBlocks.map(b => b.kind), ...jobs.map(j => j.kind)];
   const cap = kinds.every(isShort) ? cfg.maxShortPerDay : cfg.maxPerDay;
   if (kinds.length > cap) return [];
 
-  const length = service.durationMin + (service.transitionMin || 0);
+  const length = jobs.reduce((n, j) => n + j.durationMin + (j.transitionMin || 0), 0);
   const earliest = now.getTime() + cfg.minNoticeHours * 3600000;
   const out = [];
   for (let s = cfg.firstStart; s <= cfg.lastStart; s += cfg.step) {
@@ -88,4 +144,10 @@ function slotsForDay(dateStr, dayBlocks, service, now, cfg = CFG) {
   return out;
 }
 
-module.exports = { CFG, TZ, localToUtc, utcToLocal, toHHMM, fromHHMM, kindOf, slotsForDay, daysFromToday };
+// One vehicle, one job (kept for the existing callers and tests).
+const slotsForDay = (dateStr, dayBlocks, service, now, cfg = CFG) => slotsForJobs(dateStr, dayBlocks, [service], now, cfg);
+
+module.exports = {
+  CFG, TZ, localToUtc, utcToLocal, toHHMM, fromHHMM, kindOf, slotsForDay, slotsForJobs, daysFromToday,
+  MAX_CARS, MAX_PER_CAR, parsePlan, combineJob, resolvePlan, partyBlocks,
+};

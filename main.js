@@ -70,28 +70,99 @@ async function realApi(path, opts) {
 const api = (...a) => (window.VVM_API || realApi)(...a);
 
 const now0 = new Date();
-const S = { step: 'service', services: null, item: null, variation: null, y: now0.getFullYear(), m: now0.getMonth(), days: {}, loading: false, date: null, time: null, error: '', busy: false, result: null };
+// count: 1 vehicle, 2 vehicles (same day, back to back), 3 = "3 or more" (we send them to text / email us)
+// cars[i] = services picked for vehicle i: { item, kind, v }
+const S = { step: 'service', services: null, open: null, count: 1, active: 0, cars: [[]], vehicles: ['', ''], locked: [false, false], vError: '', focusV: false, notice: '', y: now0.getFullYear(), m: now0.getMonth(), days: {}, loading: false, date: null, time: null, error: '', busy: false, result: null };
 const bk = $('#bk');
 if (window.VVM_DEMO) $('#demoBadge').hidden = false;
 
 const contactLine = `<p class="muted">Call or text <a href="tel:+12406019451"><b>(240) 601-9451</b></a> or email ${esc(CONTACT_EMAIL)}.</p>`;
+const CERAMIC_MSG = 'Ceramic coating takes the whole day, so it is booked on its own. Text or email us if you want to combine it.';
+const INCLUDED_MSG = 'The Full Factory Reset already includes the Interior and Exterior Reset.';
+
+/* ----- cart helpers ----- */
+const carItems = i => S.cars[i] || [];
+const booked = () => S.cars.slice(0, S.count === 2 ? 2 : 1);               // the vehicles being booked
+const carMin = i => carItems(i).reduce((n, x) => n + x.v.minutes, 0);
+const carCents = i => carItems(i).reduce((n, x) => n + x.v.priceCents, 0);
+const totalMin = () => booked().reduce((n, _, i) => n + carMin(i), 0);
+const totalCents = () => booked().reduce((n, _, i) => n + carCents(i), 0);
+const planStr = () => booked().map(c => c.map(x => x.v.id).join('.')).join(',');
+const names = i => carItems(i).map(x => x.item).join(' + ');
+const vname = i => (S.vehicles[i] || '').trim();
+const lines = () => booked().map((_, i) => `${S.count === 2 ? `Vehicle ${i + 1} (${vname(i)})` : vname(0)}: ${carItems(i).map(x => `${x.item} (${x.v.label})`).join(' + ')}`);
+const title = () => S.count === 2 ? '2 vehicles, same day' : names(0);
+// why `g` cannot be added to this vehicle's cart, or '' if it can
+function conflict(items, g) {
+  const others = items.filter(x => x.item !== g.name).map(x => x.kind);
+  if (g.kind === 'ceramic') return others.length || S.count === 2 ? CERAMIC_MSG : '';
+  if (others.includes('ceramic')) return CERAMIC_MSG;
+  if (g.kind === 'full' && (others.includes('interior') || others.includes('exterior'))) return INCLUDED_MSG;
+  if ((g.kind === 'interior' || g.kind === 'exterior') && others.includes('full')) return INCLUDED_MSG;
+  return '';
+}
+const problem = () => (S.count === 2 && booked().some((_, i) => carItems(i).some(x => x.kind === 'ceramic'))) ? CERAMIC_MSG : '';
+const ready = () => S.count < 3 && booked().every((_, i) => S.locked[i] && carItems(i).length) && !problem();
 
 function stepper() {
-  const names = ['Service', 'Date & time', 'Details'], at = { service: 0, date: 1, details: 2, done: 3 }[S.step];
-  return `<ol class="bsteps">${names.map((n, i) => `<li class="${i === at ? 'on' : i < at ? 'past' : ''}"><span>${i + 1}</span>${n}</li>`).join('')}</ol>`;
+  const labels = ['Service', 'Date & time', 'Details'], at = { service: 0, date: 1, details: 2, done: 3 }[S.step];
+  return `<ol class="bsteps">${labels.map((n, i) => `<li class="${i === at ? 'on' : i < at ? 'past' : ''}"><span>${i + 1}</span>${n}</li>`).join('')}</ol>`;
 }
 const back = to => `<button type="button" class="link" data-act="back" data-to="${to}">← Back</button>`;
+
+// First row for each vehicle: year, make and model. Confirm locks it in; Edit unlocks it.
+function vehicleRow() {
+  const i = S.active, n = S.count === 2 ? `Vehicle ${i + 1}` : 'Your vehicle';
+  if (S.locked[i]) return `<div class="vrow locked"><span class="v-k">${n}</span><b class="v-t">${esc(vname(i))}</b><span class="v-ok">✓ Locked in</span><button type="button" class="link" data-act="vedit">Edit</button></div>`;
+  return `<form id="vform" class="vrow" novalidate><label for="f-vinfo">${n}: year, make &amp; model</label>
+    <div class="v-in"><input id="f-vinfo" name="vinfo" value="${esc(S.vehicles[i])}" placeholder="e.g. 2022 Lexus IS 350" autocomplete="off" enterkeyhint="done"><button class="mini" type="submit">Confirm</button></div>
+    ${S.vError ? `<p class="err" role="alert">${esc(S.vError)}</p>` : '<p class="muted small">Fill this in first, then pick your services.</p>'}</form>`;
+}
+
+function serviceStep() {
+  let html = `<div class="vcount" role="group" aria-label="How many vehicles">
+      <p class="vc-q">Booking for more than 1 vehicle?</p>
+      <div class="seg">${[[1, 'Just 1'], [2, '2 vehicles'], [3, '3 or more']].map(([n, l]) => `<button type="button" class="${S.count === n ? 'on' : ''}" data-act="count" data-n="${n}" aria-pressed="${S.count === n}">${l}</button>`).join('')}</div>
+    </div>`;
+  if (S.count === 3) {
+    return html + `<div class="notice help"><b>3 or more vehicles?</b> We would love to help. Text or email us and we will set up your day.
+      <div class="notice-btns"><a class="mini" href="sms:+12406019451">Text (240) 601-9451</a><a class="mini alt" href="mailto:${esc(CONTACT_EMAIL)}?subject=Booking%20for%203%2B%20vehicles">Email us</a></div></div>`;
+  }
+  const items = carItems(S.active);
+  if (S.count === 2) {
+    html += `<div class="car-tabs" role="tablist">${[0, 1].map(i => `<button type="button" role="tab" aria-selected="${S.active === i}" class="${S.active === i ? 'on' : ''}" data-act="car" data-i="${i}">Vehicle ${i + 1}${S.locked[i] && carItems(i).length ? ' ✓' : ''}</button>`).join('')}</div>
+      <p class="muted small">Both vehicles are done the same day, one after the other.</p>`;
+  }
+  html += vehicleRow();
+  if (!S.locked[S.active]) {
+    return html + (booked().some((_, i) => carItems(i).length) ? '<p class="muted small">Your services are saved. Confirm the vehicle to keep going.</p>' : '');
+  }
+  html += '<div class="svc-list">' + S.services.map((g, gi) => {
+    const has = items.some(x => x.item === g.name);
+    return `<div class="svc ${S.open === gi ? 'open' : ''} ${has ? 'has' : ''}">
+        <button type="button" class="svc-head" data-act="item" data-i="${gi}"><b>${esc(g.name)}${has ? ' <em class="tick">✓ added</em>' : ''}</b><span>from ${money(g.variations[0].priceCents)}</span></button>
+        ${S.open === gi ? `<div class="sizes-pick">${g.variations.map(v => { const on = items.some(x => x.v.id === v.id); return `<button type="button" class="chip ${on ? 'on' : ''}" aria-pressed="${on}" data-act="pick" data-g="${gi}" data-id="${esc(v.id)}"><b>${esc(v.label)}</b><span>${money(v.priceCents)} · ${dur(v.minutes)}</span><i class="pm" aria-hidden="true">${on ? '✓' : '+'}</i></button>`; }).join('')}</div>` : ''}
+      </div>`;
+  }).join('') + '</div>';
+  const why = S.notice || problem();
+  if (why) html += `<p class="notice" role="alert">${esc(why)}</p>`;
+  if (booked().some((_, i) => carItems(i).length)) {
+    html += `<div class="cart"><p class="cart-k">Your booking</p>${booked().map((_, i) => `<div class="cart-car"><p class="cart-v">${S.count === 2 ? `Vehicle ${i + 1} · ` : ''}${esc(vname(i))}</p>${carItems(i).map(x => `<div class="cart-line"><span>${esc(x.item)} · ${esc(x.v.label)}</span><span>${money(x.v.priceCents)}</span><button type="button" class="rm" data-act="drop" data-car="${i}" data-id="${esc(x.v.id)}" aria-label="Remove ${esc(x.item)}">×</button></div>`).join('') || '<p class="muted small">No service yet</p>'}</div>`).join('')}
+      <div class="cart-total"><span>Total · about ${dur(totalMin())}</span><b>${money(totalCents())}</b></div>
+      ${booked().some((_, i) => { const k = carItems(i).map(x => x.kind); return k.includes('interior') && k.includes('exterior'); }) ? '<p class="tip"><b>Tip:</b> the Full Factory Reset includes both and costs less.</p>' : ''}</div>`;
+  }
+  html += `<p class="muted small add-hint">Tap <b>+</b> on any size to add another service${S.count === 2 ? ' to this vehicle' : ''}. Tap it again to remove it.</p>
+    <button type="button" class="go" data-act="go" ${ready() ? '' : 'disabled'}>Pick a date &amp; time</button>
+    ${!ready() && !why ? `<p class="muted small">${booked().some((_, i) => !S.locked[i]) ? 'Confirm your vehicle info' + (S.count === 2 ? ' for both vehicles' : '') + ' and' : 'Please'} choose at least one service${S.count === 2 ? ' for each vehicle' : ''}.</p>` : ''}`;
+  return html;
+}
 
 function render() {
   if (S.step === 'error') { bk.innerHTML = `<p><b>Online booking is unavailable right now.</b></p>${contactLine}`; return; }
   if (!S.services) { bk.innerHTML = '<p class="muted">Loading open times…</p>'; return; }
   let html = stepper();
   if (S.step === 'service') {
-    html += '<div class="svc-list">' + S.services.map((g, i) => `
-      <div class="svc ${S.item === i ? 'open' : ''}">
-        <button type="button" class="svc-head" data-act="item" data-i="${i}"><b>${esc(g.name)}</b><span>from ${money(g.variations[0].priceCents)}</span></button>
-        ${S.item === i ? `<div class="sizes-pick">${g.variations.map(v => `<button type="button" class="chip" data-act="variation" data-id="${esc(v.id)}"><b>${esc(v.label)}</b><span>${money(v.priceCents)} · ${dur(v.minutes)}</span></button>`).join('')}</div>` : ''}
-      </div>`).join('') + '</div>';
+    html += serviceStep();
   } else if (S.step === 'date') {
     const label = new Date(S.y, S.m, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     const first = new Date(S.y, S.m, 1).getDay(), total = new Date(S.y, S.m + 1, 0).getDate();
@@ -102,7 +173,7 @@ function render() {
       cells += `<button type="button" class="day ${open ? 'open' : ''} ${S.date === k ? 'sel' : ''}" ${open ? `data-act="day" data-d="${k}"` : 'disabled'} aria-label="${open ? 'Available ' : 'Unavailable '}${esc(longDate(k))}">${d}</button>`;
     }
     html += `${back('service')}
-      <p class="picked"><b>${esc(S.item.name)}</b> · ${esc(S.variation.label)} · ${money(S.variation.priceCents)} · about ${dur(S.variation.minutes)}</p>
+      <p class="picked"><b>${esc(title())}</b> · ${money(totalCents())} · about ${dur(totalMin())}${S.count === 2 ? `<br><span class="picked-sub">${lines().map(esc).join('<br>')}</span>` : ''}</p>
       <div class="cal">
         <div class="cal-head"><button type="button" class="nav-m" data-act="prev" ${atNow ? 'disabled' : ''} aria-label="Previous month">‹</button><b>${label}</b><button type="button" class="nav-m" data-act="next" aria-label="Next month">›</button></div>
         <div class="dow">${['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => `<span>${d}</span>`).join('')}</div>
@@ -114,15 +185,14 @@ function render() {
     html += `${back('date')}
       <div class="sum">
         <p class="sum-k">Your booking</p>
-        <h3 class="sum-t">${esc(S.item.name)}</h3>
-        <p class="sum-v">${esc(S.variation.label)} · ${money(S.variation.priceCents)} · about ${dur(S.variation.minutes)}</p>
+        <h3 class="sum-t">${esc(title())}</h3>
+        <p class="sum-v">${lines().map(esc).join('<br>')}<br>${money(totalCents())} · about ${dur(totalMin())}</p>
         <p class="sum-d">${esc(longDate(S.date)).replace(/ (\d+)$/, '&nbsp;$1')} <span class="sum-at">at ${fmtTime(S.time)}</span></p>
       </div>
       <form id="bform" class="form" novalidate>
         <label>Name<input id="f-name" name="name" required autocomplete="name"></label>
         <label>Phone<input id="f-phone" name="phone" type="tel" required autocomplete="tel"></label>
         <label>Email<input id="f-email" name="email" type="email" required autocomplete="email"></label>
-        <label>Vehicle (year, make, model)<input id="f-vehicle" name="vehicle" required placeholder="e.g. 2022 Lexus IS 350"></label>
         <label>Address &amp; concerns<span class="hint">Where should we arrive + any concerns or questions can let us know here - We will get back to you as soon as possible! Thank you!!!</span><textarea id="f-notes" name="notes" rows="4" placeholder="Street address, city, ZIP"></textarea></label>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
@@ -131,55 +201,90 @@ function render() {
         <p class="consent">By booking, you agree to our <a href="terms.html" target="_blank" rel="noopener">Terms</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>
       </form>`;
   } else if (S.step === 'done') {
-    html = `<div class="done"><h3>Your booking is now reserved!</h3>
-      <p><b>${esc(S.item.name)}</b> · ${esc(S.variation.label)}<br>${esc(longDate(S.date))} at ${fmtTime(S.time)}</p>
-      <p>We will reach out shortly to answer any questions and confirm all details! Thank you!</p>
+    const tones = ['#ffe27a', '#4f8ff0', '#e4572e', '#ffffff', '#8fd0ff', '#f7c948'];
+    const confetti = Array.from({ length: 36 }, (_, i) => `<i style="--x:${Math.round(Math.random() * 100)}%;--d:${(Math.random() * 0.9).toFixed(2)}s;--t:${(2.4 + Math.random() * 1.6).toFixed(2)}s;--r:${Math.round(Math.random() * 720 - 360)}deg;--c:${tones[i % tones.length]};--w:${6 + Math.round(Math.random() * 6)}px"></i>`).join('');
+    html = `<div class="done yay">
+      <div class="confetti" aria-hidden="true">${confetti}</div>
+      <div class="yay-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></svg></div>
+      <h3 class="yay-big">YAY!</h3>
+      <p class="yay-sub">You're all booked and ready!</p>
+      <p class="yay-line">Your booking is now reserved.</p>
+      <div class="yay-card">
+        <p class="yay-t">${esc(title())}</p>
+        <p class="yay-l">${lines().map(esc).join('<br>')}</p>
+        <p class="yay-d">${esc(longDate(S.date))} <span>at ${fmtTime(S.time)}</span></p>
+      </div>
+      <p class="yay-note">We will reach out shortly to answer any questions and confirm all details! Thank you!</p>
       ${contactLine}</div>`;
   }
   bk.innerHTML = html;
+  if (S.focusV) { S.focusV = false; const el = $('#f-vinfo'); if (el) { el.focus({ preventScroll: true }); el.setSelectionRange(el.value.length, el.value.length); } }
 }
 
 async function loadMonth() {
   S.loading = true; S.days = {}; render();
   try {
     const month = `${S.y}-${String(S.m + 1).padStart(2, '0')}`;
-    S.days = (await api(`/availability?variation=${encodeURIComponent(S.variation.id)}&month=${month}`)).days || {};
+    S.days = (await api(`/availability?plan=${encodeURIComponent(planStr())}&month=${month}`)).days || {};
   } catch (e) { S.error = e.message; }
   S.loading = false; render();
 }
 
 bk.addEventListener('click', async e => {
-  const t = e.target.closest('[data-act]'); if (!t) return;
+  const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
   const a = t.dataset.act;
-  if (a === 'item') { S.item = S.item === +t.dataset.i ? null : +t.dataset.i; render(); }
-  else if (a === 'variation') {
-    const g = S.services[S.item]; S.variation = g.variations.find(v => v.id === t.dataset.id); S.item = g;
-    S.date = null; S.time = null; S.step = 'date'; await loadMonth();
+  if (a === 'count') {
+    S.count = +t.dataset.n; S.notice = ''; S.active = 0;
+    if (S.count === 2 && S.cars.length < 2) S.cars.push([]);
+    S.vError = ''; S.focusV = S.count < 3 && !S.locked[0]; render();
   }
+  else if (a === 'car') { S.active = +t.dataset.i; S.notice = ''; S.vError = ''; S.focusV = !S.locked[S.active]; render(); }
+  else if (a === 'vedit') { S.locked[S.active] = false; S.vError = ''; S.focusV = true; render(); }
+  else if (a === 'item') { S.open = S.open === +t.dataset.i ? null : +t.dataset.i; render(); }
+  else if (a === 'pick') {
+    const g = S.services[+t.dataset.g], v = g.variations.find(x => x.id === t.dataset.id), items = carItems(S.active);
+    const already = items.find(x => x.v.id === v.id);
+    if (already) S.cars[S.active] = items.filter(x => x !== already);                       // tap again to remove
+    else {
+      const why = conflict(items, g);
+      if (why) { S.notice = why; render(); return; }
+      S.cars[S.active] = [...items.filter(x => x.item !== g.name), { item: g.name, kind: g.kind, v }];   // another size of the same service replaces it
+    }
+    S.notice = ''; render();
+  }
+  else if (a === 'drop') { const i = +t.dataset.car; S.cars[i] = carItems(i).filter(x => x.v.id !== t.dataset.id); S.notice = ''; render(); }
+  else if (a === 'go') { if (!ready()) return; S.date = null; S.time = null; S.error = ''; S.step = 'date'; await loadMonth(); }
   else if (a === 'prev' || a === 'next') { S.m += a === 'next' ? 1 : -1; if (S.m > 11) { S.m = 0; S.y++; } if (S.m < 0) { S.m = 11; S.y--; } S.date = null; await loadMonth(); }
   else if (a === 'day') { S.date = t.dataset.d; render(); }
   else if (a === 'time') { S.time = t.dataset.t; S.error = ''; S.step = 'details'; render(); }
-  else if (a === 'back') {
-    S.step = t.dataset.to;
-    if (S.step === 'service') { S.item = S.services.indexOf(S.item); if (S.item < 0) S.item = null; }
-    render();
-  }
+  else if (a === 'back') { S.step = t.dataset.to; S.error = ''; render(); }
 });
+
+// remember what is typed in the vehicle box, so switching vehicles or steps never loses it
+bk.addEventListener('input', e => { if (e.target.name === 'vinfo') S.vehicles[S.active] = e.target.value; });
 
 bk.addEventListener('submit', async e => {
   e.preventDefault();
+  if (e.target.id === 'vform') {                                    // Confirm vehicle info: lock it in
+    const v = String(new FormData(e.target).get('vinfo') || '').replace(/\s+/g, ' ').trim();
+    S.vehicles[S.active] = v;
+    if (v.length < 4 || !/[a-z]/i.test(v)) { S.vError = 'Please enter the year, make and model, like 2022 Lexus IS 350.'; S.focusV = true; render(); return; }
+    S.locked[S.active] = true; S.vError = ''; render(); return;
+  }
   const f = Object.fromEntries(new FormData(e.target));
   const digits = (f.phone || '').replace(/\D/g, '');
   if ((f.name || '').trim().length < 2) S.error = 'Please enter your name.';
   else if (digits.length < 10) S.error = 'Please enter a 10-digit phone number.';
   else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email || '')) S.error = 'Please enter a valid email.';
-  else if ((f.vehicle || '').trim().length < 2) S.error = 'Please enter your vehicle year, make and model.';
   else S.error = '';
   if (S.error) { render(); return; }
   S.busy = true; render();
   try {
-    S.result = await api('/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...f, variationId: S.variation.id, date: S.date, time: S.time }) });
-    S.step = 'done';
+    const plan = booked().map((_, i) => carItems(i).map(x => x.v.id));
+    S.result = await api('/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: f.name, phone: f.phone, email: f.email, notes: f.notes, website: f.website, vehicles: booked().map((_, i) => vname(i)), plan, date: S.date, time: S.time }) });
+    S.step = 'done'; S.busy = false; render();
+    bk.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    return;
   } catch (err) {
     S.error = err.message;
     if (err.status === 409) { S.step = 'date'; S.time = null; S.busy = false; await loadMonth(); S.error = ''; return; }

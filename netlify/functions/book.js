@@ -1,9 +1,10 @@
 const { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, isPublic } = require('../lib/square');
-const { slotsForDay, localToUtc, fromHHMM } = require('../lib/rules');
+const { slotsForJobs, localToUtc, fromHHMM, resolvePlan, partyBlocks } = require('../lib/rules');
 const { blocksWithHolds, addHold } = require('../lib/holds');
 const crypto = require('crypto');
 
 const clean = (s, max) => String(s || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, max);
+const money = c => '$' + (c / 100).toLocaleString('en-US', { maximumFractionDigits: 2 });
 
 exports.handler = async (event) => {
   try {
@@ -11,26 +12,35 @@ exports.handler = async (event) => {
     const b = JSON.parse(event.body || '{}');
     if (b.website) return json(200, { ok: true }); // honeypot: bots fill this in
 
-    const name = clean(b.name, 80), email = clean(b.email, 120), vehicle = clean(b.vehicle, 120), notes = clean(b.notes, 1000);
+    const name = clean(b.name, 80), email = clean(b.email, 120), notes = clean(b.notes, 1000);
     const digits = String(b.phone || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
     if (name.length < 2) throw httpError(400, 'Please enter your name.');
     if (digits.length !== 10) throw httpError(400, 'Please enter a 10-digit phone number.');
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw httpError(400, 'Please enter a valid email.');
-    if (vehicle.length < 2) throw httpError(400, 'Please enter your vehicle year, make and model.');
+
+    // The cart: one array of service ids per vehicle (older pages send a single variationId and vehicle).
+    const plan = Array.isArray(b.plan) ? b.plan : (b.variationId ? [[b.variationId]] : []);
+    const vehicles = (Array.isArray(b.vehicles) ? b.vehicles : [b.vehicle]).map(v => clean(v, 120));
+    if (!plan.length || vehicles.length !== plan.length || vehicles.some(v => v.length < 2)) {
+      throw httpError(400, plan.length > 1 ? 'Please enter the year, make and model of both vehicles.' : 'Please enter your vehicle year, make and model.');
+    }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || '') || !/^\d{2}:\d{2}$/.test(b.time || '')) throw httpError(400, 'Invalid date or time.');
 
     const catalog = await loadCatalog();
-    const v = catalog[b.variationId];
-    if (!v || !isPublic(v) || !v.bookable) throw httpError(400, 'Unknown service.');
+    const { cars, jobs } = resolvePlan(plan, catalog, isPublic);
 
     // Re-check availability on the server so a stale page can never double-book.
     const nextDay = new Date(localToUtc(b.date, 24 * 60 + 60)); // safely into the next local day
     const toDate = nextDay.toISOString().slice(0, 10);
     const blocks = await blocksWithHolds(event, await blocksByDay(b.date, toDate, catalog), b.date.slice(0, 7));
-    const open = slotsForDay(b.date, blocks[b.date] || [], v, new Date());
+    const open = slotsForJobs(b.date, blocks[b.date] || [], jobs, new Date());
     if (!open.includes(b.time)) throw httpError(409, 'Sorry, that time was just taken. Please pick another.');
 
-    const result = { ok: true, when: `${b.date} ${b.time}`, service: `${v.item} (${v.label})` };
+    const two = cars.length > 1;
+    const serviceText = cars.map((c, i) => `${two ? `Vehicle ${i + 1}: ` : ''}${c.services.map(v => `${v.item} - ${v.label}`).join(' + ')}`).join(' | ');
+    const vehicleText = two ? vehicles.map((v, i) => `Vehicle ${i + 1}: ${v}`).join(' | ') : vehicles[0];
+    const totalCents = jobs.reduce((n, j) => n + j.priceCents, 0);
+    const result = { ok: true, when: `${b.date} ${b.time}`, service: serviceText };
 
     // Free Square plans cannot create bookings through the API, so by default the
     // request goes to Netlify Forms (emailed to the owner) to be confirmed in Square.
@@ -45,15 +55,16 @@ exports.handler = async (event) => {
           method: 'POST', redirect: 'manual',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({
-            'form-name': 'booking-request', name, phone: String(b.phone), email, vehicle, notes,
-            service: `${v.item} - ${v.label}`, date: b.date, time: b.time,
+            'form-name': 'booking-request', name, phone: String(b.phone), email, vehicle: vehicleText, notes,
+            service: serviceText, party: two ? '2 vehicles, back to back' : '1 vehicle', total: money(totalCents),
+            date: b.date, time: b.time,
           }),
         });
       } catch (e) { console.error('form post failed:', e.message); }
       if (!sent || sent.status >= 400) throw httpError(502, 'We could not send your request. Please call or text us to book.');
-      // 2) Only after the owner has been notified, hold the time so nobody else can pick it.
-      const start = fromHHMM(b.time);
-      await addHold(event, { date: b.date, start, end: start + v.durationMin + (v.transitionMin || 0), kind: v.kind });
+      // 2) Only after the owner has been notified, hold the time(s) so nobody else can pick them.
+      //    Each vehicle is held as its own booking, back to back, so it matches how it is entered in Square.
+      for (const blk of partyBlocks(fromHHMM(b.time), jobs)) await addHold(event, { date: b.date, ...blk });
       return json(200, { ...result, mode: 'request' });
     }
     if (process.env.DRY_RUN !== 'false') return json(200, { ...result, mode: 'square', dryRun: true });
@@ -69,21 +80,29 @@ exports.handler = async (event) => {
       customerId = created.customer.id;
     }
 
-    const booking = await sq('/v2/bookings', { method: 'POST', body: {
-      idempotency_key: crypto.randomUUID(),
-      booking: {
-        location_id: await getLocationId(),
-        start_at: localToUtc(b.date, fromHHMM(b.time)).toISOString(),
-        customer_id: customerId,
-        customer_note: `Booked on vvmdetails.com\nVehicle: ${vehicle}\nConcerns: ${notes || 'None'}\nPhone: ${b.phone}`,
-        appointment_segments: [{
-          duration_minutes: v.durationMin,
-          service_variation_id: v.id,
-          service_variation_version: v.version,
-          team_member_id: process.env.SQUARE_TEAM_MEMBER_ID || v.teamMemberId,
-        }],
-      },
-    } });
-    return json(200, { ...result, mode: 'square', bookingId: booking.booking.id });
+    // One Square booking per vehicle, back to back; every service on a vehicle is a segment of that booking.
+    const location = await getLocationId();
+    const bookingIds = [];
+    let at = fromHHMM(b.time);
+    for (const [i, car] of cars.entries()) {
+      const booking = await sq('/v2/bookings', { method: 'POST', body: {
+        idempotency_key: crypto.randomUUID(),
+        booking: {
+          location_id: location,
+          start_at: localToUtc(b.date, at).toISOString(),
+          customer_id: customerId,
+          customer_note: `Booked on vvmdetails.com${two ? ` (vehicle ${i + 1} of 2, same day)` : ''}\nVehicle: ${vehicles[i]}\nConcerns: ${notes || 'None'}\nPhone: ${b.phone}`,
+          appointment_segments: car.services.map(v => ({
+            duration_minutes: v.durationMin,
+            service_variation_id: v.id,
+            service_variation_version: v.version,
+            team_member_id: process.env.SQUARE_TEAM_MEMBER_ID || v.teamMemberId,
+          })),
+        },
+      } });
+      bookingIds.push(booking.booking.id);
+      at += car.job.durationMin + (car.job.transitionMin || 0);
+    }
+    return json(200, { ...result, mode: 'square', bookingIds });
   } catch (e) { return fail(e); }
 };

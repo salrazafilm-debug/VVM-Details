@@ -18,7 +18,7 @@ Never put tokens or secrets in the repo or in chat. Never write to the owner's S
 - Copy tone: short, confident, happy, "love". Fewer words, more impact. Wide lines, not tall narrow columns.
 - **Holographic text must loop seamlessly**: gradient tile is 200% wide made of two identical cycles that start and end on the same color, animated `background-position 0% -> 200%` (`@keyframes holoFlow`). Never use a keyframe that jumps back (the owner saw it "turn off and on").
 - **No mouse-follow tilt, zoom or distortion on cards.** Hover on buttons lifting slightly is fine.
-- Service cards in this order: Full Factory Reset (gold, #1, crown badge, holographic border), Interior Reset, Exterior Reset, Headlight Restoration (wide standard card, full width so the 2-column grid never leaves an orphan; Before/After photo slots `headlight-before` / `headlight-after` in `assets/uploads/`; $135 from Square's bookable item; CTA is call/text because it is NOT bookable online), Paint Enhancement + Ceramic (diamond card, last).
+- Service cards in this order: Full Factory Reset (gold, #1, crown badge, holographic border), Interior Reset, Exterior Reset, Headlight Restoration (wide standard card, full width so the 2-column grid never leaves an orphan; Before/After photo slots `headlight-before` / `headlight-after` in `assets/uploads/`; $135 from Square's bookable item; CTA is Book my day because it IS bookable online, alone or added to another service), Paint Enhancement + Ceramic (diamond card, last).
   - Gold card: photos must stay untinted. Title is the biggest text on the card, "SAVE HUGE $$$" must stay clearly smaller. "PH-balanced" always capital PH. Checklist rows share one check style and align exactly.
   - Size pills flip on tap to show price. No "From $" pricing.
   - Diamond card "More info" flips to a tabbed guide. Any grid must not leave an orphan last row at any width (audit widths 340 to 1280).
@@ -27,19 +27,21 @@ Never put tokens or secrets in the repo or in chat. Never write to the owner's S
 - Do not show the street address (it is a home address). Phone (240) 601-9451, email vvm.detailing@gmail.com, Instagram @vvm.details.
 
 ## Booking system
-- Customers pick service, size, day, time. The calendar reads real bookings from Square (read-only) and applies `netlify/lib/rules.js`:
+- The first row for each vehicle is its year, make and model; Confirm locks it in (Edit unlocks it) and only then do the services appear. The details step no longer asks for vehicles. The preview trick: services/availability/book can be faked in a throwaway `_demo.html` (copy of index.html with a `window.VVM_API` mock before main.js); delete it before committing.
+- Customers pick one or more services per vehicle (a cart: tap + on any size, tap again to remove), and say how many vehicles: 1, 2 or 3+. 2 vehicles = two bookings the same day, back to back (each vehicle can have its own services). 3+ vehicles are never booked online: the page shows Text / Email buttons. Rules for carts live in `resolvePlan` in `netlify/lib/rules.js` (ceramic stands alone; Full Factory Reset cannot be combined with Interior/Exterior; each service once per vehicle; max 4 services per vehicle). A vehicle's services are combined into one job (durations add; interior + exterior together count as a full detail). API: `/availability?plan=A.B,C&month=YYYY-MM` (comma = next vehicle, dot = another service on the same vehicle) and `/book` with `plan` (array of arrays of ids) and `vehicles` (array of text). The email lists both vehicles and the total.
+- Customers pick day, time. The calendar reads real bookings from Square (read-only) and applies `netlify/lib/rules.js`:
   starts 7:00 AM to 2:00 PM every 30 min; no overlaps (Square duration + transition); max 2 bookings per day (3 only if all are interior-only or exterior-only);
   ceramic coating takes the whole day; no job squeezed before an existing booking unless 5+ free hours (`MIN_WINDOW_MIN`); any weekday; 12 h notice; up to a year ahead.
 - Owner is on Square Free, which cannot create bookings through the API. So `BOOKING_MODE=request` (default): the request is emailed via Netlify Forms (`booking-request`) to the owner, who adds it to Square by hand. The site holds the time (Netlify Blobs, 3 days) until it appears in Square at the same start time.
 - Order in `book.js` matters: email first, hold second; fail loudly, never silently.
-- Customer sees "Your booking is now reserved!". No deposit; payment after the service.
+- When a booking goes through the customer sees a big celebration screen (confetti, gold check, giant "YAY!", "You're all booked and ready!", "Your booking is now reserved.") in `#book .yay` styles; keep that wording and the reduced-motion fallback. No deposit; payment after the service.
 - Env vars (Netlify only): `SQUARE_ACCESS_TOKEN`, `SQUARE_ENV=production`, `BOOKING_MODE=request`.
 
 ## Square facts
 - Location ID `L6GQ2NMD5YF1H`, timezone America/New_York, one team member (the owner). Prices and durations come from Square's service library, which is the source of truth.
 - The Square connector available to Claude is read-only for the catalog (`ITEMS_WRITE` was refused). Reconnecting it with write access is the owner's step.
 - **Maintenance Plan** (clients only) is hidden from the website on purpose: `isPublic()` in `netlify/lib/square.js` filters it out of `services`, `availability` and `book`. It still blocks time as a 'full' job. Headlight Restoration and Engine Bay are 'other' and never shown.
-- Square has TWO items named Headlight Restoration: a bookable appointment service ($135, 45 min, the one the site shows) and an older plain product ($100, not bookable). The owner may want to delete the old one. Headlight is kind `other` in `kindOf`, so it is never offered in the booking calendar; making it bookable needs a new kind in `netlify/lib/rules.js`.
+- Square has TWO items named Headlight Restoration: a bookable appointment service ($135, 45 min, the one the site shows) and an older plain product ($100, not bookable). The owner may want to delete the old one. Headlight has its own kind `headlight` in `kindOf`; it is bookable online and counts as a short job (3 a day allowed when every job is short). Square lists it as 45 min but the owner says it takes an hour: the owner must change the duration in Square (the site always uses Square's duration).
 - Square `price_description` text on some variations is stale (for example Paint Enhancement says $725/$1050); the real `price_money` is what the site uses and it matches.
 
 ## Domain and email facts (checked 2026-10-11)

@@ -1,14 +1,15 @@
 const { loadCatalog, blocksByDay, json, fail, httpError, isPublic } = require('../lib/square');
-const { slotsForDay } = require('../lib/rules');
+const { slotsForJobs, parsePlan, resolvePlan } = require('../lib/rules');
 const { blocksWithHolds } = require('../lib/holds');
 
+// ?plan=A.B,C&month=2026-11  (comma = next vehicle, dot = another service on the same vehicle)
+// ?variation=A still works for one service.
 exports.handler = async (event) => {
   try {
-    const { variation, month } = event.queryStringParameters || {};
+    const { plan, variation, month } = event.queryStringParameters || {};
     if (!/^\d{4}-\d{2}$/.test(month || '')) throw httpError(400, 'Invalid month.');
     const catalog = await loadCatalog();
-    const v = catalog[variation];
-    if (!v || !isPublic(v)) throw httpError(400, 'Unknown service.');
+    const { jobs } = resolvePlan(parsePlan(plan || variation), catalog, isPublic);
 
     const [y, m] = month.split('-').map(Number);
     const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, '0')}`;
@@ -18,7 +19,7 @@ exports.handler = async (event) => {
     const days = {};
     for (let d = 1; d <= total; d++) {
       const key = `${month}-${String(d).padStart(2, '0')}`;
-      const slots = slotsForDay(key, blocks[key] || [], v, now);
+      const slots = slotsForJobs(key, blocks[key] || [], jobs, now);
       if (slots.length) days[key] = slots;
     }
     return json(200, { days });

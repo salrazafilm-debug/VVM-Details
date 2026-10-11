@@ -1060,3 +1060,81 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
   .card.std .ph-ico{width:34px;height:34px}
 }
 @media(max-width:900px){.card.std.wide .cta{padding:16px 20px;letter-spacing:.07em;font-size:.88rem;white-space:nowrap}}
+
+/* ===== Booking: how many vehicles, a + on every size, and the cart ===== */
+#book .vcount{margin:0 0 18px;padding:16px 18px;border:2px solid #9fd0f3;border-radius:20px;background:#f3faff}
+#book .vc-q{font:800 .86rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:#0b2a4a;margin-bottom:10px}
+#book .seg{display:flex;flex-wrap:wrap;gap:8px}
+#book .seg button,#book .car-tabs button{flex:1 1 0;min-width:96px;padding:12px 14px;border-radius:999px;border:2px solid #2d78c4;background:#fff;color:#0b2a4a;font:800 .9rem var(--body);cursor:pointer;transition:.2s}
+#book .seg button:hover,#book .car-tabs button:hover{background:#e3f2ff}
+#book .seg button.on,#book .car-tabs button.on{background:linear-gradient(135deg,#0b2a4a,#2d78c4);color:#fff;box-shadow:0 0 18px rgba(79,160,240,.55)}
+#book .car-tabs{display:flex;gap:8px;margin:0 0 8px}
+#book .chip{position:relative;padding-right:50px}
+#book .chip .pm{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:900 1.1rem/1 var(--body);font-style:normal;background:#e3f2ff;color:#0b2a4a}
+#book .chip.on{background:linear-gradient(135deg,#0b2a4a,#2d78c4);color:#fff;border-color:#0b2a4a}
+#book .chip.on .pm{background:#ffe27a;color:#2a1a00}
+#book .chip.on span{opacity:.92}
+#book .svc.has{border-color:#2d78c4}
+#book .tick{font-style:normal;font-size:.72rem;font-weight:800;color:#1a8a4a;margin-left:6px;letter-spacing:.04em;text-transform:uppercase}
+#book .cart{margin:16px 0 8px;padding:16px 18px;border-radius:20px;border:2px solid #2d78c4;background:#fff;box-shadow:0 8px 24px rgba(45,120,196,.16)}
+#book .cart-k{font:900 .8rem var(--display);letter-spacing:.12em;text-transform:uppercase;color:#2d78c4;margin-bottom:6px}
+#book .cart-v{font:800 .95rem var(--display);color:#0b2a4a;margin:8px 0 2px}
+#book .cart-line{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:9px 0;border-bottom:1px solid #e3f2ff;font:700 1rem var(--body);color:#0b2a4a}
+#book .cart-line span:first-child{flex:1}
+#book .rm{width:30px;height:30px;flex:none;border-radius:50%;border:2px solid #b3261e;background:#fff;color:#b3261e;font:900 1.05rem/1 var(--body);cursor:pointer}
+#book .rm:hover{background:#b3261e;color:#fff}
+#book .cart-total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:12px;font:800 1rem var(--body);color:#0b2a4a}
+#book .cart-total b{font:900 1.5rem var(--display)}
+#book .tip{margin-top:8px;font:600 .92rem/1.45 var(--body);color:#33506e}
+#book .notice{margin:12px 0;padding:14px 16px;border-radius:16px;background:#fff6dd;border:2px solid #f0b429;color:#2a1a00;font:700 .98rem/1.5 var(--body)}
+#book .notice.help{background:#e3f2ff;border-color:#2d78c4;color:#0b2a4a}
+#book .notice-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+#book .mini{display:inline-block;padding:13px 20px;border-radius:999px;background:linear-gradient(135deg,#0b2a4a,#2d78c4);color:#fff;font:800 .85rem var(--display);letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 18px rgba(79,160,240,.5)}
+#book .mini.alt{background:#fff;color:#0b2a4a;border:2px solid #2d78c4;box-shadow:none}
+#book .go{width:100%;margin-top:14px;padding:20px 28px;border-radius:999px;border:0;background:linear-gradient(135deg,#0b2a4a,#2d78c4);color:#fff;font:800 1.02rem var(--display);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 24px rgba(79,160,240,.55);transition:transform .25s var(--ease),opacity .2s}
+#book .go:hover:not(:disabled){transform:translateY(-3px)}
+#book .go:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+#book .picked-sub{font-weight:600;font-size:.92rem;color:#33506e}
+#book .add-hint{margin-top:10px}
+@media(max-width:520px){#book .seg button,#book .car-tabs button{min-width:0;padding:11px 8px;font-size:.84rem}#book .go{font-size:.92rem;letter-spacing:.1em}}
+
+/* ===== Booking: vehicle info is the first row; Confirm locks it in ===== */
+#book .vrow{margin:0 0 16px;padding:16px 18px;border-radius:20px;border:2px solid #2d78c4;background:#fff;display:grid;gap:8px;box-shadow:0 8px 24px rgba(45,120,196,.14)}
+#book .vrow label{font:800 .84rem var(--display);letter-spacing:.1em;text-transform:uppercase;color:#0b2a4a}
+#book .v-in{display:flex;gap:10px;flex-wrap:wrap}
+#book .v-in input{flex:1 1 220px;min-width:0;font:600 1.12rem/1.4 var(--body);color:#0b2a4a;padding:15px 16px;border:2px solid #9fd0f3;background:#fff;border-radius:16px}
+#book .v-in input:focus{outline:0;border-color:#2d78c4;box-shadow:0 0 0 4px rgba(45,120,196,.2)}
+#book .v-in input::placeholder{color:#6f89a6;font-weight:500}
+#book button.mini{border:0;cursor:pointer}
+#book .vrow.locked{grid-template-columns:auto 1fr auto auto;align-items:center;gap:12px;background:#f3faff;border-color:#9fd0f3;box-shadow:none}
+#book .v-k{font:800 .78rem var(--display);letter-spacing:.1em;text-transform:uppercase;color:#2d78c4}
+#book .v-t{font:800 1.1rem/1.3 var(--body);color:#0b2a4a;overflow-wrap:anywhere}
+#book .v-ok{font:800 .78rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:#1a8a4a;white-space:nowrap}
+#book .vrow .link{margin:0}
+@media(max-width:520px){#book .vrow.locked{grid-template-columns:1fr auto}#book .vrow.locked .v-k{grid-column:1/-1}}
+
+/* ===== Booking reserved: the big YAY screen ===== */
+#book .done.yay{position:relative;overflow:hidden;text-align:center;border-radius:30px;padding:clamp(30px,6vw,60px) clamp(18px,4vw,44px);color:#fff;
+  background:radial-gradient(ellipse at 50% 0%,#2d78c4 0%,rgba(45,120,196,0) 62%),linear-gradient(160deg,#0b2a4a 0%,#123b6e 100%);box-shadow:0 0 0 3px #f7c948,0 24px 60px rgba(11,42,74,.45)}
+#book .yay > *:not(.confetti){position:relative;z-index:2}
+#book .confetti{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+#book .confetti i{position:absolute;top:-18px;left:var(--x);width:var(--w);height:calc(var(--w) * 1.7);background:var(--c);border-radius:2px;opacity:0;animation:confettiFall var(--t) cubic-bezier(.25,.6,.35,1) var(--d) 1 both}
+@keyframes confettiFall{0%{opacity:1;transform:translate3d(0,0,0) rotate(0)}85%{opacity:1}100%{opacity:0;transform:translate3d(0,560px,0) rotate(var(--r))}}
+#book .yay-badge{width:clamp(78px,16vw,104px);height:clamp(78px,16vw,104px);margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#fff3b8,#f7c948 55%,#e4a11b);box-shadow:0 0 0 6px rgba(255,226,122,.28),0 0 46px rgba(247,200,60,.75);animation:yayPop .75s cubic-bezier(.2,1.5,.4,1) both}
+#book .yay-badge svg{width:56%;height:56%;fill:none;stroke:#2a1a00;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
+#book .yay .yay-big{margin:6px 0 0;font:italic 900 clamp(4.2rem,19vw,10rem)/.95 var(--display);letter-spacing:-.045em;
+  background-image:linear-gradient(90deg,#ffe27a 0%,#f7c948 12.5%,#ff9d3d 25%,#f7c948 37.5%,#ffe27a 50%,#f7c948 62.5%,#ff9d3d 75%,#f7c948 87.5%,#ffe27a 100%);background-size:200% 100%;background-repeat:repeat;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 26px rgba(247,200,60,.55));animation:yayPop .8s .1s cubic-bezier(.2,1.5,.4,1) both,holoFlow 6s linear infinite}
+@keyframes yayPop{0%{opacity:0;transform:scale(.4) rotate(-6deg)}100%{opacity:1;transform:none}}
+#book .yay-sub{margin-top:4px;font:italic 900 clamp(1.7rem,6.4vw,3.2rem)/1.1 var(--display);letter-spacing:-.025em;color:#fff;text-shadow:0 0 30px rgba(143,208,255,.65);text-wrap:balance}
+#book .done.yay .yay-line{margin-top:10px;font:800 clamp(1rem,2.8vw,1.2rem) var(--body);letter-spacing:.14em;text-transform:uppercase;color:#ffe27a}
+#book .yay-card{max-width:560px;margin:24px auto 0;padding:20px 24px;border-radius:22px;text-align:left;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.34);backdrop-filter:none}
+#book .done.yay .yay-t{font:900 clamp(1.15rem,3vw,1.4rem)/1.25 var(--display);color:#fff}
+#book .done.yay .yay-l{margin-top:6px;font:600 1rem/1.55 var(--body);color:#dcecff}
+#book .done.yay .yay-d{margin-top:14px;padding-top:14px;border-top:1.5px solid rgba(255,255,255,.28);font:900 clamp(1.25rem,3.6vw,1.8rem)/1.2 var(--display);color:#fff}
+#book .done.yay .yay-d span{color:#ffe27a;text-shadow:0 0 18px rgba(247,200,60,.6)}
+#book .done.yay .yay-note{max-width:520px;margin:22px auto 0;font:600 1.05rem/1.6 var(--body);color:#e6f2ff;text-wrap:pretty}
+#book .yay .muted{margin-top:10px;color:#cfe6fa}
+#book .yay .muted a{color:#ffe27a;font-weight:800}
+@media(prefers-reduced-motion:reduce){#book .confetti{display:none}#book .yay-badge,#book .yay .yay-big{animation:none!important}}
+#book .done.yay .yay-sub{color:#fff}

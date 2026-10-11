@@ -37,4 +37,61 @@ const eleventh = [{ start: 660, end: 990, kind: 'full' }];
 for (const svc of [full, ext, int, cer, { kind: 'exterior', durationMin: 75, transitionMin: 60 }]) assert.deepEqual(r.slotsForDay(d, eleventh, svc, now), []);
 // Oct 14: existing 2:00 PM interior -> a morning full detail that ends by 2:00 PM is still allowed
 s = r.slotsForDay(d, [{ start: 840, end: 1055, kind: 'interior' }], full, now); assert.equal(s[0], '07:00'); assert.equal(s.at(-1), '08:30');
+
+// ---- headlight restoration + carts + two vehicles ----
+assert.equal(r.kindOf('Headlight Restoration'), 'headlight');
+const head = { kind: 'headlight', durationMin: 60, transitionMin: 0 };
+// combining one vehicle's services into one job
+const J = (kind, d, t = 0, p = 0) => ({ kind, durationMin: d, transitionMin: t, priceCents: p });
+let job = r.combineJob([J('full', 330, 0, 29500), J('headlight', 60, 0, 13500)]);
+assert.deepEqual([job.kind, job.durationMin, job.transitionMin, job.priceCents], ['full', 390, 0, 43000]);
+assert.equal(r.combineJob([J('interior', 215), J('exterior', 90, 60)]).kind, 'full');       // interior + exterior = a full detail
+assert.equal(r.combineJob([J('interior', 215), J('headlight', 60)]).kind, 'interior');       // headlight does not change a short job
+assert.equal(r.combineJob([J('headlight', 60)]).kind, 'headlight');
+assert.equal(r.combineJob([J('exterior', 90, 60), J('headlight', 60)]).transitionMin, 60);    // transition counted once, the longest one
+assert.equal(r.combineJob([J('ceramic', 450), J('headlight', 60)]).kind, 'ceramic');
+// plan strings
+assert.deepEqual(r.parsePlan('A.B,C'), [['A', 'B'], ['C']]);
+assert.deepEqual(r.parsePlan('A'), [['A']]);
+assert.deepEqual(r.parsePlan(''), []);
+assert.deepEqual(r.parsePlan(undefined), []);
+// cart rules
+const mk = (id, item, kind, d, extra = {}) => ({ id, item, label: 'x', kind, durationMin: d, transitionMin: 0, priceCents: 10000, bookable: true, ...extra });
+const cat = {
+  F: mk('F', 'Full Factory Reset', 'full', 330), I: mk('I', 'Interior Reset', 'interior', 215), E: mk('E', 'Exterior Reset', 'exterior', 90, { transitionMin: 60 }),
+  H: mk('H', 'Headlight Restoration', 'headlight', 60), C: mk('C', 'Paint Enhancement + 5 yr Ceramic coating', 'ceramic', 450),
+  M: mk('M', 'Maintenance Plan', 'full', 255), Z: mk('Z', 'Headlight Restoration', 'headlight', 60, { bookable: false }),
+};
+const pub = v => v.kind !== 'other' && !/maintenance/i.test(v.item);
+const bad = (plan, re) => assert.throws(() => r.resolvePlan(plan, cat, pub), e => e.status === 400 && re.test(e.message), JSON.stringify(plan));
+assert.equal(r.resolvePlan([['F', 'H']], cat, pub).jobs[0].durationMin, 390);
+assert.equal(r.resolvePlan([['I', 'E']], cat, pub).jobs[0].kind, 'full');
+assert.equal(r.resolvePlan([['F'], ['H']], cat, pub).jobs.length, 2);
+bad([], /pick a service/i); bad(undefined, /pick a service/i); bad([[]], /service for each/i);
+bad([['F'], ['I'], ['E']], /3 or more vehicles/i);          // 3+ vehicles are never booked online
+bad([['H', 'H']], /once per vehicle/i);                      // same service twice
+bad([['C', 'H']], /whole day/i); bad([['C'], ['H']], /whole day/i); bad([['F'], ['C']], /whole day/i);   // ceramic stands alone
+bad([['F', 'I']], /already includes/i); bad([['F', 'E']], /already includes/i);
+bad([['M']], /unknown service/i);                            // maintenance plan is never public
+bad([['Z']], /unknown service/i);                            // not bookable in Square
+bad([['nope']], /unknown service/i);
+assert.equal(r.resolvePlan([['F', 'H', 'I'].slice(0, 2), ['I', 'E', 'H']], cat, pub).cars.length, 2);
+// back to back
+assert.deepEqual(r.partyBlocks(420, [J('full', 330), J('exterior', 90, 60)]), [{ start: 420, end: 750, kind: 'full' }, { start: 750, end: 900, kind: 'exterior' }]);
+// one headlight job: an empty day offers every half hour up to 2:00 PM
+s = r.slotsForJobs(d, [], [head], now); assert.equal(s[0], '07:00'); assert.equal(s.at(-1), '14:00');
+// two vehicles, same day, back to back: the second job must also fit before an existing booking
+const twoExt = [J('exterior', 90, 60), J('exterior', 90, 60)];                       // 150 + 150 = 300 minutes
+s = r.slotsForJobs(d, [], twoExt, now); assert.equal(s[0], '07:00'); assert.equal(s.at(-1), '14:00');
+s = r.slotsForJobs(d, [{ start: 720, end: 900, kind: 'interior' }], twoExt, now);    // existing 12:00-3:00 PM short job: 3 short jobs allowed
+assert.ok(s.includes('07:00')); assert.ok(!s.includes('08:00'));                      // 7:00 + 300 min = 12:00 fits, 8:00 would overlap
+// two vehicles use two of the daily slots: an existing full detail leaves no room for a pair of full details
+assert.deepEqual(r.slotsForJobs(d, [{ start: 420, end: 750, kind: 'full' }], [J('full', 330), J('full', 330)], now), []);
+assert.deepEqual(r.slotsForJobs(d, [{ start: 420, end: 750, kind: 'full' }], twoExt, now), []);   // full + 2 short = 3 jobs, not all short
+// a pair of full details on an empty day is fine (two bookings)
+assert.ok(r.slotsForJobs(d, [], [J('full', 330), J('full', 330)], now).length > 0);
+// ceramic never pairs up
+assert.deepEqual(r.slotsForJobs(d, [], [J('ceramic', 450), J('headlight', 60)], now), []);
+// a cart on one vehicle (full + headlight) is one booking of 390 minutes
+s = r.slotsForJobs(d, [{ start: 840, end: 1055, kind: 'interior' }], [job], now); assert.equal(s[0], '07:00'); assert.ok(!s.includes('08:00'));
 console.log('all rule tests passed');

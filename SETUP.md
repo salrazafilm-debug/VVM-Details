@@ -57,7 +57,7 @@ It is for returning clients only, so the website never offers it, even though it
 - Photos and video: drop files in `assets/uploads/` (see the README there).
 
 ## Booking rules (`netlify/lib/rules.js`)
-7:00 AM to 2:00 PM starts every 30 min, no overlaps (Square durations + transition time), max 2 bookings a day or 3 when all are interior-only or exterior-only, ceramic coating takes the whole day, no new job ahead of an existing booking unless there are 5 free hours (`MIN_WINDOW_MIN`), any day of the week, 12 hours minimum notice, bookable up to a year ahead.
+7:00 AM to 2:00 PM starts every 30 min, no overlaps (Square durations + transition time), max 2 bookings a day or 3 when all are interior-only or exterior-only, ceramic coating takes the whole day, no new job ahead of an existing booking unless there are 5 free hours (`MIN_WINDOW_MIN`), any day of the week, 12 hours minimum notice, bookable up to a year ahead. Customers can add several services to one vehicle (times and prices add up) and book 2 vehicles on the same day, done back to back and counted as 2 bookings. For 3 or more vehicles the site shows Text and Email buttons instead. Headlight Restoration counts as a short job, and Square must show its real duration (about an hour).
 
 ## If you later want the site to create the booking in Square itself
 That needs Square Appointments Plus/Premium AND write permission on the token. Set `BOOKING_MODE` = `square` and `DRY_RUN` = `false`. Test with `DRY_RUN` = `true` first.
