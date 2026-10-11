@@ -95,3 +95,9 @@ assert.deepEqual(r.slotsForJobs(d, [], [J('ceramic', 450), J('headlight', 60)], 
 // a cart on one vehicle (full + headlight) is one booking of 390 minutes
 s = r.slotsForJobs(d, [{ start: 840, end: 1055, kind: 'interior' }], [job], now); assert.equal(s[0], '07:00'); assert.ok(!s.includes('08:00'));
 console.log('all rule tests passed');
+
+// engine bay is a bookable add-on like headlight
+assert.equal(r.kindOf('Engine Bay Detail'), 'engine');
+assert.equal(r.combineJob([{kind:'interior',durationMin:215,transitionMin:0,priceCents:0},{kind:'engine',durationMin:90,transitionMin:0,priceCents:0}]).kind, 'interior');
+assert.equal(r.combineJob([{kind:'engine',durationMin:90,transitionMin:0,priceCents:0}]).kind, 'engine');
+console.log('engine bay tests passed');

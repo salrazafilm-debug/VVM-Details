@@ -50,10 +50,11 @@ function kindOf(itemName) {
   if (n.startsWith('exterior')) return 'exterior';
   if (n.includes('maintenance')) return 'full';
   if (n.includes('headlight')) return 'headlight';
+  if (n.includes('engine')) return 'engine';
   return 'other';
 }
 // Short jobs may stack three to a day (see maxShortPerDay). A headlight restoration is about an hour.
-const isShort = k => k === 'interior' || k === 'exterior' || k === 'headlight';
+const isShort = k => k === 'interior' || k === 'exterior' || k === 'headlight' || k === 'engine';
 
 // ---- carts: one or two vehicles, each with one or more services ----
 const MAX_CARS = 2;       // 3 or more vehicles: the customer is sent to text/email us
@@ -67,9 +68,9 @@ function parsePlan(s) {
 // One vehicle's services become a single job. Full/ceramic dominate; interior + exterior together act like a full detail.
 function combineKind(kinds) {
   if (kinds.includes('ceramic')) return 'ceramic';
-  const core = kinds.filter(k => k !== 'headlight');
+  const core = kinds.filter(k => k !== 'headlight' && k !== 'engine');   // headlight and engine bay are add-ons
   if (core.includes('full') || (core.includes('interior') && core.includes('exterior'))) return 'full';
-  return core.length ? core[0] : 'headlight';
+  return core.length ? core[0] : kinds[0];
 }
 function combineJob(services) {
   return {
