@@ -99,6 +99,7 @@ const json = (status, body) => ({
   headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   body: JSON.stringify(body),
 });
-const fail = e => json(e.status && e.status < 600 ? e.status : 500, { error: e.status && e.status < 500 ? e.message : 'Something went wrong. Please call or text us to book.' });
+const fail = e => { if (!e.status || e.status >= 500 || e.square) console.error('request failed', e.status, e.message, JSON.stringify(e.square || ''), 'env=' + (process.env.SQUARE_ENV || 'unset')); return failJson(e); };
+const failJson = e => json(e.status && e.status < 600 ? e.status : 500, { error: e.status && e.status < 500 ? e.message : 'Something went wrong. Please call or text us to book.' });
 
 module.exports = { sq, loadCatalog, getLocationId, blocksByDay, json, fail, httpError, BOOKABLE, isPublic, CFG };
