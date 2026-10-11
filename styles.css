@@ -1228,3 +1228,25 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .pe-media{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:0 auto}
 .pe-media .mslot,.pe-media .mslot-video{aspect-ratio:3/4;margin:0;max-width:none}
 @media(max-width:600px){.pe-media{grid-template-columns:1fr;max-width:340px}}
+
+/* Phones: tighter, wider-looking cards; photos zoomed out so the whole car shows */
+@media(max-width:600px){
+  .card.feature.gold .photo.grid4{aspect-ratio:1/1;min-height:0}
+  .card.feature.gold .photo.grid4 img{object-fit:cover}
+  .card .info{padding:18px 16px 22px}
+  .card h3{font-size:clamp(1.45rem,7vw,1.8rem);margin-bottom:8px}
+  .card .desc,.desc{font-size:.9rem;line-height:1.42}
+  .hook{font-size:1.02rem;margin:0 0 6px}
+  .card .kicker{font-size:.66rem;margin-bottom:6px}
+  .sizes{gap:6px;margin:2px 0 8px}
+  .size{width:100px;height:40px}
+  .size .face{font-size:.88rem}
+  .size .back{font-size:1.05rem}
+  .size-hint{margin:0 0 8px;font-size:.78rem}
+  .checks{padding:12px 14px;gap:8px 14px;margin:2px auto 12px;grid-template-columns:1fr}
+  .checks li{font-size:.9rem;line-height:1.35;gap:9px}
+  .card .cta,.card .cta-row .cta{padding-top:12px;padding-bottom:12px}
+  .card.std .photo{aspect-ratio:16/10}
+  .card.std.wide .photo{aspect-ratio:16/10}
+  .cards{gap:26px}
+}
