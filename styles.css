@@ -1194,3 +1194,11 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .rev-by{font-size:.98rem}
 @media(max-width:1000px){.rev{flex-basis:calc((100% - 28px) / 2)}}
 @media(max-width:640px){.rev-wrap{padding:0 6px}.rev{flex-basis:90%}.rev-track{gap:18px}}
+
+/* Reviews: cards hug their text (short ones no longer stretch), name sits right under the text, verified badge */
+.rev-track{align-items:flex-start}
+.rev-by{margin-top:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.rev-text{margin-bottom:14px}
+.rev-src{margin-left:0}
+.rev-src.ver{display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 5px;background:#e8f3ea;color:#14602b;border:1.5px solid #14602b;font-size:.64rem}
+.rev-src.ver svg{width:16px;height:16px;flex:none;fill:#1e8e3e}
