@@ -48,7 +48,7 @@ Never put tokens or secrets in the repo or in chat. Never write to the owner's S
 - The 404 page uses root-relative links because Netlify serves it at any depth. Keep it that way.
 
 ## Open items (as of 2026-10-11)
-1. Square catalog (owner does it; connector is read-only): Full Factory Reset **Mini-Van is $360 in Square, must be $410** (site says $410); Interior Reset **has no Truck variation**, add Truck $255, 4 hrs, online-bookable (site already shows it). Until fixed the calendar shows Square's data and does not match the cards.
+1. Square catalog: DONE by the owner on 2026-10-11. Full Factory Reset Mini-Van is $410. Interior Reset has Sedan $235 and one combined **SUV / Truck** option at $255, 4 hrs (no separate Truck variation). The site card mirrors this. The calendar reads Square, so keep the two in step.
 2. Netlify: repo is imported but a deploy could not be confirmed (no status on the GitHub commit). Still needed: confirm deploy published, Forms email notification to vvm.detailing@gmail.com, add the three env vars (the owner pastes the Square token, never Claude), test booking, then point vvmdetails.com (last).
 3. Terms page: waiting on the owner's answers to the `[YOUR CALL]` items in `drafts/terms-draft.md`, then build `terms.html` and link it beside Privacy (footer and booking consent line).
 4. Replace screenshot-crop photos with the owner's originals; fill `ceramic-1..4` and `ceramic-video` slots.
