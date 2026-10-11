@@ -1333,3 +1333,13 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .card.feature.gold .photo.single{display:block;aspect-ratio:3/4;min-height:0}
 .card.feature.gold .photo.single img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
 @media(min-width:901px){.card.feature.gold .photo.single{aspect-ratio:auto;min-height:100%}}
+
+/* Full Factory Reset: heavier, livelier body face (Plus Jakarta Sans); Montserrat stays for headings, badges and buttons */
+.card.gold{--body:'Plus Jakarta Sans','Manrope',system-ui,sans-serif}
+.card.gold .size .face{font-family:var(--body);font-weight:800;font-size:1.02rem;letter-spacing:.01em}
+.card.gold .size-hint{font-family:var(--body);font-weight:600;opacity:.85}
+.card.gold .checks li,.card.gold .desc{font-family:var(--body);font-weight:700}
+.card.gold .bl-w{font-family:var(--body);font-weight:800;font-size:1.05rem}
+.card.gold .bl-2{font-family:var(--body);font-weight:700;font-size:1.02rem}
+.card.gold .bl-2 b{font-weight:800}
+.card.gold .bl-3 span{font-family:var(--body);font-weight:700}
