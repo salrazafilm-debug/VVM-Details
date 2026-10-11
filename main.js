@@ -72,7 +72,7 @@ const api = (...a) => (window.VVM_API || realApi)(...a);
 const now0 = new Date();
 // count: 1 vehicle, 2 vehicles (same day, back to back), 3 = "3 or more" (we send them to text / email us)
 // cars[i] = services picked for vehicle i: { item, kind, v }
-const S = { step: 'service', services: null, open: null, count: 1, active: 0, cars: [[]], vehicles: ['', ''], locked: [false, false], vError: '', focusV: false, notice: '', y: now0.getFullYear(), m: now0.getMonth(), days: {}, loading: false, date: null, time: null, error: '', busy: false, result: null };
+const S = { step: 'service', services: null, open: null, count: 1, active: 0, cars: [[]], multi: false, vehicles: ['', ''], locked: [false, false], vError: '', focusV: false, notice: '', y: now0.getFullYear(), m: now0.getMonth(), days: {}, loading: false, date: null, time: null, error: '', busy: false, result: null };
 const bk = $('#bk');
 if (window.VVM_DEMO) $('#demoBadge').hidden = false;
 
@@ -119,11 +119,21 @@ function vehicleRow() {
     ${S.vError ? `<p class="err" role="alert">${esc(S.vError)}</p>` : '<p class="muted small">Fill this in first, then pick your services.</p>'}</form>`;
 }
 
-function serviceStep() {
-  let html = `<div class="vcount" role="group" aria-label="How many vehicles">
+// Under the vehicle box: "Booking for more than 1 vehicle?" Yes / No. Yes pops up 1, 2, 3 or more; No blurs the picker.
+function multiBlock() {
+  const yes = S.multi;
+  return `<div class="vcount" role="group" aria-label="More than one vehicle">
       <p class="vc-q">Booking for more than 1 vehicle?</p>
-      <div class="seg">${[[1, 'Just 1'], [2, '2 vehicles'], [3, '3 or more']].map(([n, l]) => `<button type="button" class="${S.count === n ? 'on' : ''}" data-act="count" data-n="${n}" aria-pressed="${S.count === n}">${l}</button>`).join('')}</div>
+      <div class="seg yn">${[[1, 'Yes'], [0, 'No']].map(([v, l]) => `<button type="button" class="${!!v === yes ? 'on' : ''}" data-act="multi" data-v="${v}" aria-pressed="${!!v === yes}">${l}</button>`).join('')}</div>
+      <div class="vpick ${yes ? 'open' : 'off'}" ${yes ? '' : 'aria-hidden="true" inert'}>
+        <p class="vc-q sm">How many vehicles?</p>
+        <div class="seg">${[[1, '1'], [2, '2'], [3, '3 or more']].map(([n, l]) => `<button type="button" class="${S.count === n ? 'on' : ''}" data-act="count" data-n="${n}" aria-pressed="${S.count === n}">${l}</button>`).join('')}</div>
+      </div>
     </div>`;
+}
+
+function serviceStep() {
+  let html = vehicleRow() + multiBlock();
   if (S.count === 3) {
     return html + `<div class="notice help"><b>3 or more vehicles?</b> We would love to help. Text or email us and we will set up your day.
       <div class="notice-btns"><a class="mini" href="sms:+12406019451">Text (240) 601-9451</a><a class="mini alt" href="mailto:${esc(CONTACT_EMAIL)}?subject=Booking%20for%203%2B%20vehicles">Email us</a></div></div>`;
@@ -131,9 +141,8 @@ function serviceStep() {
   const items = carItems(S.active);
   if (S.count === 2) {
     html += `<div class="car-tabs" role="tablist">${[0, 1].map(i => `<button type="button" role="tab" aria-selected="${S.active === i}" class="${S.active === i ? 'on' : ''}" data-act="car" data-i="${i}">Vehicle ${i + 1}${S.locked[i] && carItems(i).length ? ' ✓' : ''}</button>`).join('')}</div>
-      <p class="muted small">Both vehicles are done the same day, one after the other.</p>`;
+      <p class="muted small">Both vehicles are done the same day, one after the other. Tap a vehicle to switch.</p>`;
   }
-  html += vehicleRow();
   if (!S.locked[S.active]) {
     return html + (booked().some((_, i) => carItems(i).length) ? '<p class="muted small">Your services are saved. Confirm the vehicle to keep going.</p>' : '');
   }
@@ -233,7 +242,13 @@ async function loadMonth() {
 bk.addEventListener('click', async e => {
   const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
   const a = t.dataset.act;
-  if (a === 'count') {
+  if (a === 'multi') {
+    S.multi = t.dataset.v === '1'; S.notice = ''; S.active = 0;
+    S.count = S.multi ? 2 : 1;
+    if (S.count === 2 && S.cars.length < 2) S.cars.push([]);
+    S.vError = ''; render();
+  }
+  else if (a === 'count') {
     S.count = +t.dataset.n; S.notice = ''; S.active = 0;
     if (S.count === 2 && S.cars.length < 2) S.cars.push([]);
     S.vError = ''; S.focusV = S.count < 3 && !S.locked[0]; render();

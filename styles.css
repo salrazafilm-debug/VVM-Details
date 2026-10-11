@@ -1144,3 +1144,11 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 @media(max-width:900px){.gallery{column-count:2;column-gap:10px}.gallery figure{margin-bottom:10px;border-radius:14px}}
 @media(min-width:900px){.card.feature.gold{grid-template-columns:1fr 1.15fr}}
 @media(max-width:900px){.card.feature.gold .photo.grid4{aspect-ratio:3/4}}
+
+/* "More than 1 vehicle?" Yes / No; the 1 / 2 / 3 or more picker pops open on Yes and is blurred on No */
+#book .vcount{margin-top:16px}
+#book .seg.yn button{flex:0 1 140px}
+#book .vpick{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s var(--ease),opacity .25s,filter .25s,margin .25s}
+#book .vpick.open{max-height:140px;opacity:1;margin-top:14px}
+#book .vpick.off{max-height:140px;opacity:.5;filter:blur(3px);margin-top:14px;pointer-events:none;user-select:none}
+#book .vc-q.sm{font-size:.76rem;opacity:.8}
