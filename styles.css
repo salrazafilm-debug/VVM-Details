@@ -1357,3 +1357,8 @@ button.cta{border:2px solid transparent;cursor:pointer;line-height:1.2}
 .loc b{font-weight:800}.loc em{font-style:normal;font-weight:600;opacity:.85}
 @media(max-width:600px){.loc{font-size:.8rem;padding:7px 13px 7px 10px;margin-bottom:16px}.loc svg{width:17px;height:17px}.lede{max-width:28ch}}
 @media(max-width:380px){.loc{font-size:.72rem;gap:6px;padding:6px 11px 6px 9px;white-space:nowrap}.loc svg{width:15px;height:15px}}
+
+/* hero collage: no gaps. Tiles overlap by a few px and the mismatched diagonal cuts are gone, so no background shows through */
+.collage{gap:0;background:transparent}
+.tile{margin:-4px;clip-path:none!important;box-shadow:0 0 0 3px rgba(255,255,255,.28)}
+.t1{z-index:1}.t2{z-index:2}.t3{z-index:3}.t4{z-index:4}
